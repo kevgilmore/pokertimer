@@ -11,7 +11,7 @@ import { Button, Space, Table, Form, Input } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import game from "../game/game";
 import {useDispatch} from "react-redux";
-import {addBlindLevel} from "../redux/counter";
+import {addBlindLevel, updateBlindLevel} from "../redux/counter";
 
 const EditableContext = React.createContext(null);
 
@@ -66,7 +66,7 @@ const EditableCell = ({
             },
           ]}
         >
-          <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+          <Input ref={inputRef} onPressEnter={save} onBlur={save} tabIndex={dataIndex}/>
         </Form.Item>
       ) : (
         <div
@@ -76,6 +76,8 @@ const EditableCell = ({
             paddingRight: 50,
           }}
           onClick={toggleEdit}
+          onFocus={toggleEdit}
+          tabIndex={0}
         >
           {children}
         </div>
@@ -226,11 +228,14 @@ const Tab1Component = () => {
 
     const onDragEnd = ({ active, over }) => {
         if (active.id !== over?.id) {
+            let newSortedData = []
             setDataSource((previous) => {
                 const activeIndex = previous.findIndex((i) => i.key === active.id);
                 const overIndex = previous.findIndex((i) => i.key === over?.id);
-                return arrayMove(previous, activeIndex, overIndex);
+                newSortedData = arrayMove(previous, activeIndex, overIndex)
+                return newSortedData
             });
+            dispatch(updateBlindLevel(newSortedData))
         }
     };
     return (
