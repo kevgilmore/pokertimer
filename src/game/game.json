@@ -1,0 +1,42 @@
+{
+    "title": "Poker Tournament",
+    "description": "£20 + 1 reuy",
+    "currency": "GBP",
+    "isSoundEnabled": true,
+    "startTime": "8pm",
+    "buyinPrice": 10,
+    "rebuyPrice": 10,
+    "expenses": 0,
+    "placesPaid": 3,
+    "payouts": [50, 30, 20],
+    "numOfPlayers": 6,
+    "blindStructure": [
+        {
+            "key": "1",
+            "small": 25,
+            "big": 50,
+            "duration": 6
+        },
+        {
+            "key": "2",
+            "small": 50,
+            "big": 100,
+            "duration": 6
+        },
+        {
+            "key": "3",
+            "small": 75,
+            "big": 150,
+            "duration": 6
+        },
+        {
+            "key": "4",
+            "small": 100,
+            "big": 200,
+            "duration": 6
+        }
+    ],
+    "currentBlindLevel": 1,
+    "timePassed": 0,
+    "isPaued": false
+}

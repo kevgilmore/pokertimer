@@ -1,0 +1,190 @@
+:root {
+  --navbarDark: #1B1B1B;
+  --mainDark: #1A1A1A;
+  --subDark: #202020;
+  --stroke: #414141;
+  --footerDark: #606060;
+  --btnDark: #272727;
+  --text: #F1F1F1;
+  --greenText: #BCFF66;
+  --accent: #666CFF;
+}
+
+.navbarBg {
+  background-color: var(--navbarDark);
+}
+
+.mainBg {
+  background-color: var(--mainDark);
+}
+
+.timerBox {
+  padding: 0 0 20px 100px;
+}
+
+.flexBoxCol {
+  display: flex;
+  align-items: center;
+}
+
+.blindsCard {
+  background-color: var(--subDark);
+  border: 3px solid var(--stroke);
+  border-radius: 5px;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.blindsCard > .ant-card-body {
+  padding: 0 !important;
+}
+
+.blindsList {
+  margin-top: 10px;
+}
+
+.ant-col-2:nth-child(1) > h4 {
+  text-align:right;
+  margin: 0;
+  color: grey;
+}
+
+.ant-col-2:nth-child(1) > h4:nth-child(2) {
+  color: whitesmoke;
+}
+
+.verticalLine {
+  margin-top: 10px;
+  margin-left: 15px;
+  border-left: 2px solid gray;
+  height: 90px;
+}
+
+.activeBlindLeveltext {
+  width: 100%;
+  font-size: 50px;
+  margin: 0;
+}
+
+.activeBlindGreenTextLabel {
+  margin: 0;
+  padding-top: 10px;
+}
+
+.activeBlindGreenText {
+  margin: 0;
+  font-size: 70px;
+  color: var(--greenText);
+}
+
+.ant-progress-text {
+  margin-top: 60px !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 150px;
+}
+
+.prizesColumn {
+  margin-top: 20px;
+}
+
+.timeRemainingLabel {
+color: white;
+}
+
+.timeRemainingText {
+  background-color: var(--subDark);
+  color: lightgray;
+  border: 2px solid white;
+  width: 75px;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  margin-left: 75px;
+}
+
+.prizesCard {
+  background-color: var(--subDark);
+  border: 3px solid var(--stroke);
+  border-radius: 5px;
+  margin-bottom: 20px;
+  width: 300px;
+  text-align: center;
+  color: var(--text);
+}
+
+.settingsBtn {
+  float: right !important;
+  margin-top: 16px;
+  margin-bottom: auto;
+  background-color: var(--btnDark);
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.footer {
+  background-color: var(--footerDark);
+  margin-top: 1rem;
+  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/*SETTINGS PAGE*/
+.editable-cell-value-wrap {
+  border: 2px solid var(--stroke);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.addNewLevelBtn {
+  margin-left: 15px;
+  margin-top: 10px !important;
+  width: 500px;
+}
+
+.tableHeaderLabels {
+  display: flex;
+}
+
+.tableHeaderItem {
+  margin-left: 70px;
+  flex: 1;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ant-tabs-nav {
+  margin-bottom: 0 !important;
+}
+
+.ant-tabs-content-holder {
+  background-color: var(--mainDark);
+  border-radius: 5px;
+  height: 100%;
+  padding: 10px;
+}
+
+.ant-table {
+background-color: var(--mainDark) !important;
+}
+
+.ant-tabs-nav-list {
+  min-width: 552px;
+}
+
+.ant-tabs-tab {
+  width: 184px;
+}
+
+.ant-tabs-tab-active {
+  background-color: var(--accent) !important;
+}
+
+.ant-tabs-tab-btn {
+  color: lightgray !important;
+  font-weight: bold;
+}
