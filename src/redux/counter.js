@@ -5,6 +5,7 @@ const initialState = {
     blindLevel: 1,
     blindStructure: TwentyFiveFifty,
     count: 0,
+    prizePool: 266
 }
 
 export const counterSlice = createSlice({
