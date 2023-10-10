@@ -11,7 +11,7 @@ import { Button, Space, Table, Form, Input } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import game from "../game/game";
 import {useDispatch} from "react-redux";
-import {addBlindLevel, updateBlindLevel} from "../redux/counter";
+import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/counter";
 
 const EditableContext = React.createContext(null);
 
@@ -190,6 +190,7 @@ const Tab1Component = () => {
     const handleDelete = (key) => {
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
+        dispatch(deleteBlindLevel(key))
     };
 
     const components = {
