@@ -9,9 +9,8 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Button, Space, Table, Form, Input } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import game from "../game/game";
-import {useDispatch} from "react-redux";
-import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/counter";
+import {useDispatch, useSelector} from "react-redux";
+import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/game";
 
 const EditableContext = React.createContext(null);
 
@@ -143,7 +142,9 @@ const EditableRow = ({ children, ...props }) => {
     );
 };
 const Tab1Component = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const game = useSelector(state => state.game)
+    console.log("game11", game)
     const [dataSource, setDataSource] = useState(game.blindStructure);
     const [count, setCount] = useState(game.blindStructure.length);
     const defaultColumns = [

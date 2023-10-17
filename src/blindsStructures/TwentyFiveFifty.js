@@ -9,25 +9,25 @@ const twentyFiveFifty = [
         key: '1',
         small: 25,
         big: 50,
-        duration: 6,
+        duration: 30,
     },
     {
         key: '2',
         small: 50,
         big: 100,
-        duration: 6,
+        duration: 30,
     },
     {
         key: '3',
         small: 75,
         big: 150,
-        duration: 6,
+        duration: 30,
     },
     {
         key: '4',
         small: 100,
         big: 200,
-        duration: 6,
+        duration: 30,
     }
 ]
 

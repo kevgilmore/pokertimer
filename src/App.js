@@ -5,7 +5,7 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, restartGame} from "./redux/counter";
+import {changeBlindLevel, restartGame} from "./redux/game";
 
 const { Header, Content } = Layout;
 
@@ -44,16 +44,16 @@ const App = () => {
 
     const startTimer = () => {
                hasGameStarted = true
-               setTimeLeft(game.blindStructure[game.blindLevel-1].duration)
-               if (game.blindLevel <=game.blindStructure.length) {// stop running end of array
+               setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
+               if (game.currentBlindLevel <=game.blindStructure.length) {// stop running end of array
                    timerInterval = setInterval(() => {
                        if (!isPaused) {
-                           if ((game.blindStructure[game.blindLevel-1].duration - timePassed) > 0) {// not end of level
+                           if ((game.blindStructure[game.currentBlindLevel-1].duration - timePassed) > 0) {// not end of level
                                timePassed++
-                               let timeLeft = (game.blindStructure[game.blindLevel-1].duration - timePassed)
+                               let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration - timePassed)
                                setTimeLeft(timeLeft) 
                            } else { // end of level
-                               if (game.blindLevel <=(game.blindStructure.length - 1)) {// has next blind
+                               if (game.currentBlindLevel <=(game.blindStructure.length - 1)) {// has next blind
                                    //changeBlind(+1) //todo issue here
                                    setTimer(+1);
                                    setIsTriggered(!isTriggered)
@@ -67,10 +67,10 @@ const App = () => {
     }
 
    const changeBlind = (change) => {
-       let newBlindLevel = (game.blindLevel + change)
+       let newBlindLevel = (game.currentBlindLevel + change)
        if (newBlindLevel > 0 && newBlindLevel <= game.blindStructure.length) {// stop running end of array
            timePassed = 0
-//            game.blindLevel = newBlindLevel
+//            game.currentBlindLevel = newBlindLevel
            dispatch(changeBlindLevel(newBlindLevel))
            clearInterval(timerInterval)
            startTimer()
@@ -86,9 +86,9 @@ const App = () => {
        }
        if (!hasGameStarted) { // restarting game
            timePassed = 0
-           setTimeLeft(game.blindStructure[game.blindLevel-1].duration)
+           setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
            //game
-//            savedGame.blindLevel = 1
+//            savedgame.currentBlindLevel = 1
            startTimer()
            dispatch(restartGame())
        }
@@ -110,8 +110,8 @@ const App = () => {
    }
 
     const calculatePercentage = () => {
-       let timeLeft = (game.blindStructure[game.blindLevel-1].duration - timePassed);
-       return ((timeLeft / game.blindStructure[game.blindLevel-1].duration) * 100).toFixed(0)
+       let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration - timePassed);
+       return ((timeLeft / game.blindStructure[game.currentBlindLevel-1].duration) * 100).toFixed(0)
     }
 
 
@@ -200,12 +200,12 @@ const App = () => {
                             </Col>
                             <div className="verticalLine"></div>
                             <Col className="flexBoxCol" span={10}>
-                                <h1 className="activeBlindLeveltext">LEVEL {game.blindLevel}</h1>
+                                <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
                             </Col>
                             <Col span={6}>
                                 <h4 className="activeBlindGreenTextLabel">BLINDS</h4>
                                 <h1 className="activeBlindGreenText">
-                                    {game.blindStructure[game.blindLevel-1].small + "/" + game.blindStructure[game.blindLevel-1].big}
+                                    {game.blindStructure[game.currentBlindLevel-1].small + "/" + game.blindStructure[game.currentBlindLevel-1].big}
                                 </h1>
                             </Col>
                             <Col span={5}></Col>

@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
-import { DownOutlined } from '@ant-design/icons';
+import { ConsoleSqlOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Space, Form, Input, Slider, Flex, Col, Row  } from 'antd';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
+import { useEffect } from 'react';
+import {updateBlindLevel, updateBuyinPrice, updateExpenses, updateNumOfPlayers} from '../redux/game';
 
 const onFinish = (values) => {
   console.log('Success:', values);
 };
-
 const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
@@ -32,24 +33,27 @@ const menuProps = {
   };
 
 
-  const PayoutSlider = ({index, prizePool, updatePercentVal}) => {
-    const [inputValue, setInputValue] = useState(0);
+  const PayoutSlider = ({index, prizePool, updatePercentVal, defaultValue}) => {
+    const [inputValue, setInputValue] = useState(defaultValue);
+    useEffect(() => {
+      updatePercentVal(inputValue, index)
+    }, [inputValue])
 
     const onChange = (newValue) => {
       setInputValue(newValue);
-      updatePercentVal(100 - newValue, index)
     };
-    const percent = 100 - inputValue
+
     return (
       <div>
         <Flex justify="space-between" align="center">
-          <label>£{Math.floor(prizePool * percent / 100)}</label>
-          <label>{Math.floor(percent)}%</label>
+          <label>£{Math.floor(prizePool * inputValue / 100)}</label>
+          <label>{Math.floor(inputValue)}%</label>
         </Flex >
         <Slider
-          min={1}
+          min={0}
           max={100}
           onChange={onChange}
+          defaultValue={defaultValue}
           value={typeof inputValue === 'number' ? inputValue : 100}
           tooltip={{open: false}}
         />
@@ -58,22 +62,18 @@ const menuProps = {
     )
   }
 const Tab2Component = () => {
-    const game = useSelector((state) => {
-        return state.game;
-    })
-    const prizePool = game?.prizePool
-    const [inputValue, setInputValue] = useState(1);
-    const onChange = (newValue) => {
-      setInputValue(newValue);
-    };
-    const [percentValues, setPercentValues] = useState([0,0,0]);
+  const dispatch = useDispatch()
+  const game = useSelector((state) => state.game)
+  const prizePool = (game.buyInPrice * game.numOfPlayers - game.expenses)
+    const [percentValues, setPercentValues] = useState([50, 30, 20]);
     const updatePercentVal = (pertval, index) => {
-      console.log("pertval, inde", pertval, index)
       const _val = [...percentValues]
       _val[index] = pertval;
       setPercentValues(_val)
     }
+
     const sumPercents = percentValues.reduce((acc, a) => acc + a, 0)
+
   return (
     <Form
       name="basic"
@@ -106,37 +106,53 @@ const Tab2Component = () => {
       <Form.Item
         label="Number of players"
         name="numPlayers">
-        <Input />
+        <Input
+          onChange={e => {
+            dispatch(updateNumOfPlayers(e.target.value))
+          }}
+          value={game.numOfPlayers}
+          defaultValue={game.numOfPlayers}
+        />
       </Form.Item>
   
       <Form.Item
         label="Buy-in price"
         name="buyinPrice">
-        <Input />
+        <Input
+          onChange={e => {
+          dispatch(updateBuyinPrice(e.target.value))
+        }}
+          value={game.buyInPrice}
+          defaultValue={game.buyInPrice}
+        />
       </Form.Item>
   
       <Form.Item
         label="Expenses"
         name="expenses">
-        <Input />
+        <Input
+          onChange={e => {
+          dispatch(updateExpenses(e.target.value))
+        }}
+          value={game.expenses}
+          defaultValue={game.expenses}
+        />
       </Form.Item>
   
       <hr></hr>
-      <h4>Total Prize Pool: </h4>
+        <Row justify={'space-between'} align={'middle'}>
+          <Col><h4>Total Prize Pool: </h4></Col>
+          <Col><span>£ {prizePool}</span></Col>
+        </Row>
       <hr></hr>
   
-      <h2>Prize Split</h2>
-      <Form.Item
-        label="Number of paid places"
-        name="numPaidPlaces">
-        <Input />
-   </Form.Item> 
-  
-    {/* put slider */}
+  <h2>Prize Split</h2>
     <Row>
       <Col span={6}></Col>
       <Col span={12}>
-        {[0,1,2].map(index => <PayoutSlider prizePool={prizePool} index={index} updatePercentVal={updatePercentVal}/>)}
+        <PayoutSlider prizePool={prizePool} index={0} defaultValue={50} updatePercentVal={updatePercentVal}/>
+        <PayoutSlider prizePool={prizePool} index={1} defaultValue={30} updatePercentVal={updatePercentVal}/>
+        <PayoutSlider prizePool={prizePool} index={2} defaultValue={20} updatePercentVal={updatePercentVal}/>
       </Col>
       <Col span={6}></Col>
     </Row>
