@@ -30,9 +30,7 @@ const App = () => {
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
     
-    const game = useSelector((state) => {
-        return state.game;
-    })
+    const game = useSelector((state) => state.game)
     const [timeLeft, setTimeLeft] = useState(0);
     const dispatch = useDispatch()
     const [timer, setTimer]= useState(0);
@@ -132,7 +130,6 @@ const App = () => {
     const onClose = () => {
         setOpen(false)
     };
-
     return (
         <ConfigProvider
             theme={{
@@ -177,35 +174,36 @@ const App = () => {
                         <p className="timeRemainingLabel">TOURNAMENT RUNNING TIME</p>
                         <h5 className="timeRemainingText">1:00:09</h5>
                         <Card bordered={false} className="prizesCard" style={{marginTop: 50}}>
-                            <h1>£100</h1>
+                            <h1>{game.currencySymbol}{game.prizes[0]}</h1>
                         </Card>
                         <Card bordered={false} className="prizesCard">
-                            <h1>£75</h1>
+                            <h1>{game.currencySymbol}{game.prizes[1]}</h1>
                         </Card>
                         <Card bordered={false} className="prizesCard">
-                            <h1>£50</h1>
+                            <h1>{game.currencySymbol}{game.prizes[2]}</h1>
                         </Card>
 
                     </Col>
                 </Row>
-
                 <Row>
                     <Card bordered={false} className="blindsCard">
                         <Row>
                             <Col className="blindsList" span={2}>
-                                <h4>25/50</h4>
-                                <h4>50/100</h4>
-                                <h4>75/150</h4>
-                                <h4>100/200</h4>
+                                {game.blindStructure.slice(game.currentBlindLevel < 3 ?     0 : game.currentBlindLevel - 2, 
+                                                           game.currentBlindLevel < 3 ?     4 : game.currentBlindLevel + 2
+                                    ).map((blind, index) => {
+                                    return <h4 key={index} className={parseInt(blind.key)  === (game.currentBlindLevel) ? 'blind-item-selected' : 'blind-item'}>{blind.small}/{blind.big}</h4>
+                                })}
+                                {game.currentBlindLevel > game.blindStructure.length - 2? <h4>END</h4> : null}
                             </Col>
                             <div className="verticalLine"></div>
                             <Col className="flexBoxCol" span={10}>
                                 <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
                             </Col>
                             <Col span={6}>
-                                <h4 className="activeBlindGreenTextLabel">BLINDS</h4>
+                                {/* <h4 className="activeBlindGreenTextLabel">BLINDS</h4> */}
                                 <h1 className="activeBlindGreenText">
-                                    {game.blindStructure[game.currentBlindLevel-1].small + "/" + game.blindStructure[game.currentBlindLevel-1].big}
+                                    {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
                                 </h1>
                             </Col>
                             <Col span={5}></Col>

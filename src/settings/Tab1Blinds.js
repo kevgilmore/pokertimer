@@ -144,7 +144,6 @@ const EditableRow = ({ children, ...props }) => {
 const Tab1Component = () => {
     const dispatch = useDispatch();
     const game = useSelector(state => state.game)
-    console.log("game11", game)
     const [dataSource, setDataSource] = useState(game.blindStructure);
     const [count, setCount] = useState(game.blindStructure.length);
     const defaultColumns = [

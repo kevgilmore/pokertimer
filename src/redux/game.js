@@ -4,16 +4,28 @@ import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
 const initialState = {
     startTime: "",
     isSoundEnabled: true,
-
     blindStructure: twentyFiveFifty,
     currentBlindLevel: 1,
-    
     currency: "GBP",
+    currencySymbol: "£",
     buyInPrice: 10,
     expenses: 0,
     numOfPlayers: 6,
     placesPaid: 3,
-    prizes: [100,75, 50],
+    prizes: [100, 75, 50],
+}
+
+const getCurrencySymbol = (currency) => {
+    switch (currency) {
+        case "GBP":
+            return "£"
+        case "USD":
+            return "$"
+        case "EUR":
+            return "€"
+        default:
+            return "£"
+    }
 }
 
 export const gameSlice = createSlice({
@@ -44,11 +56,17 @@ export const gameSlice = createSlice({
         updateExpenses: (state, update) => {
             state.expenses = update.payload
         },
-
+        updatePrizes: (state, update) => {
+            state.prizes = update.payload
+        },
+        updateCurrency: (state, update) => {
+            state.currency = update.payload
+            state.currencySymbol = getCurrencySymbol(update.payload)
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { changeBlindLevel, restartGame, addBlindLevel, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses } = gameSlice.actions
+export const { changeBlindLevel, restartGame, addBlindLevel, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
 
 export default gameSlice.reducer
