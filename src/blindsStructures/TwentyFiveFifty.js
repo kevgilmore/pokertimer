@@ -1,9 +1,3 @@
-// const twentyFiveFifty = {
-//     blindLevels: ['25/50', '50/100', '75/150', '100/200', '150/300', '200/400', '300/600', '400/800', '600/1200',
-//         '800/1600', '1000/2000', '1200/2400', '1500/3000', '2000/4000', '3000/6000', '4000/8000', '5000/10000'],
-//     timeLimit: [1800]
-// }
-
 const twentyFiveFifty = [
     {
         key: '1',
@@ -27,6 +21,84 @@ const twentyFiveFifty = [
         key: '4',
         small: 100,
         big: 200,
+        duration: 30,
+    },
+    {
+        key: '5',
+        small: 150,
+        big: 300,
+        duration: 30,
+    },
+    {
+        key: '6',
+        small: 200,
+        big: 400,
+        duration: 30,
+    },
+    {
+        key: '7',
+        small: 300,
+        big: 600,
+        duration: 30,
+    },
+    {
+        key: '8',
+        small: 400,
+        big: 800,
+        duration: 30,
+    },
+    {
+        key: '9',
+        small: 600,
+        big: 1200,
+        duration: 30,
+    },
+    {
+        key: '10',
+        small: 800,
+        big: 1600,
+        duration: 30,
+    },
+    {
+        key: '11',
+        small: 1000,
+        big: 2000,
+        duration: 30,
+    },
+    {
+        key: '12',
+        small: 1200,
+        big: 2400,
+        duration: 30,
+    },
+    {
+        key: '13',
+        small: 1500,
+        big: 3000,
+        duration: 30,
+    },
+    {
+        key: '14',
+        small: 2000,
+        big: 4000,
+        duration: 30,
+    },
+    {
+        key: '15',
+        small: 3000,
+        big: 6000,
+        duration: 30,
+    },
+    {
+        key: '16',
+        small: 4000,
+        big: 8000,
+        duration: 30,
+    },
+    {
+        key: '17',
+        small: 5000,
+        big: 10000,
         duration: 30,
     }
 ]

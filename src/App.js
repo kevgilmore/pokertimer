@@ -5,7 +5,7 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, restartGame} from "./redux/game";
+import {changeBlindLevel, updateStartTime} from "./redux/game";
 
 const { Header, Content } = Layout;
 
@@ -14,9 +14,9 @@ let timePassed = 0
 let isPaused = true
 let hasGameStarted = false
 
-function formatTime(time) {
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
+function formatTime(timeInSeconds) {
+    const minutes = Math.floor(timeInSeconds / 60);
+    let seconds = timeInSeconds % 60;
 
     if (seconds < 10) {
         seconds = `0${seconds}`;
@@ -41,34 +41,32 @@ const App = () => {
        }, [isTriggered])
 
     const startTimer = () => {
-               hasGameStarted = true
-               setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
-               if (game.currentBlindLevel <=game.blindStructure.length) {// stop running end of array
-                   timerInterval = setInterval(() => {
-                       if (!isPaused) {
-                           if ((game.blindStructure[game.currentBlindLevel-1].duration - timePassed) > 0) {// not end of level
-                               timePassed++
-                               let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration - timePassed)
-                               setTimeLeft(timeLeft) 
-                           } else { // end of level
-                               if (game.currentBlindLevel <=(game.blindStructure.length - 1)) {// has next blind
-                                   //changeBlind(+1) //todo issue here
-                                   setTimer(+1);
-                                   setIsTriggered(!isTriggered)
-                               } else {
-                                   stopTimer()
-                               }
-                           }
-                       }
-                   }, 1000)
-               }
+        hasGameStarted = true
+        setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
+        if (game.currentBlindLevel <=game.blindStructure.length) {// stop running end of array
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    if ((game.blindStructure[game.currentBlindLevel-1].duration - timePassed) > 0) {// not end of level
+                        timePassed++
+                        let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration - timePassed)
+                        setTimeLeft(timeLeft) 
+                    } else { // end of level
+                        if (game.currentBlindLevel <=(game.blindStructure.length - 1)) {// has next blind
+                            setTimer(+1);
+                            setIsTriggered(!isTriggered)
+                        } else {
+                            stopTimer()
+                        }
+                    }
+                }
+            }, 1000)
+        }
     }
 
    const changeBlind = (change) => {
        let newBlindLevel = (game.currentBlindLevel + change)
        if (newBlindLevel > 0 && newBlindLevel <= game.blindStructure.length) {// stop running end of array
            timePassed = 0
-//            game.currentBlindLevel = newBlindLevel
            dispatch(changeBlindLevel(newBlindLevel))
            clearInterval(timerInterval)
            startTimer()
@@ -85,10 +83,10 @@ const App = () => {
        if (!hasGameStarted) { // restarting game
            timePassed = 0
            setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
-           //game
-//            savedgame.currentBlindLevel = 1
            startTimer()
-           dispatch(restartGame())
+        //    dispatch(restartGame())
+       } else {
+            dispatch(updateStartTime(new Date().toISOString))
        }
    }
 
@@ -112,8 +110,7 @@ const App = () => {
        return ((timeLeft / game.blindStructure[game.currentBlindLevel-1].duration) * 100).toFixed(0)
     }
 
-
-    const timerFormat = () => {
+    const getTimerControls = () => {
         return <div>
             {formatTime(timeLeft)}
             <br></br>
@@ -158,7 +155,7 @@ const App = () => {
                     <Col span={14}>
                         <div className="timerBox">
                                 <Progress type="circle"
-                                          format={() => timerFormat()}
+                                          format={() => getTimerControls()}
                                           status="normal"
                                           percent={calculatePercentage()}
                                           size={600}
@@ -172,7 +169,7 @@ const App = () => {
                     {/*Prizes column*/}
                     <Col className="prizesColumn" span={10}>
                         <p className="timeRemainingLabel">TOURNAMENT RUNNING TIME</p>
-                        <h5 className="timeRemainingText">1:00:09</h5>
+                        <h5 className="timeRemainingText">{formatTime(timePassed + (game.currentBlindLevel * game.blindStructure[game.currentBlindLevel-1].duration) - game.blindStructure[0].duration)}</h5>
                         <Card bordered={false} className="prizesCard" style={{marginTop: 50}}>
                             <h1>{game.currencySymbol}{game.prizes[0]}</h1>
                         </Card>

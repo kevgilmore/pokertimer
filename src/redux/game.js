@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
 
 const initialState = {
-    startTime: "",
+    startTime: "00:00",
     isSoundEnabled: true,
     blindStructure: twentyFiveFifty,
     currentBlindLevel: 1,
@@ -32,8 +32,8 @@ export const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        restartGame: (state) => {
-            //state.currentBlindLevel = initialstate.currentBlindLevel
+        updateStartTime : (state, update) => {
+            state.startTime = update.payload
         },
         changeBlindLevel: (state, update) => {
             state.currentBlindLevel = update.payload
@@ -41,7 +41,7 @@ export const gameSlice = createSlice({
         addBlindLevel: (state, update) => {
             state.blindStructure.push(update.payload)
         },
-        updateBlindLevel: (state, update) => {
+        updateBlindLevel: (state, update) => { //rename to re-order
             state.blindStructure = update.payload
         },
         deleteBlindLevel: (state, update) => {
@@ -67,6 +67,6 @@ export const gameSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { changeBlindLevel, restartGame, addBlindLevel, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
+export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
 
 export default gameSlice.reducer

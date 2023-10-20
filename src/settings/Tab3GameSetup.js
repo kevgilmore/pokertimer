@@ -1,5 +1,25 @@
+import { Form,Input } from "antd";
+
 const tab3Component = () => {
-    return <h1>hello3</h1>
+    return (
+    <Form>
+        <Form.Item label="Title" name="numPlayers">
+            <Input
+            value=""
+            defaultValue=""
+            />
+        </Form.Item>
+
+        <Form.Item label="Subtitle" name="numPlayers">
+            <Input
+            value=""
+            defaultValue=""
+            />
+        </Form.Item>
+    </Form>
+
+
+    )
 }
 
 export default tab3Component;
