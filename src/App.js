@@ -1,12 +1,13 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs} from 'antd';
 import {useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
 import {changeBlindLevel, updateStartTime} from "./redux/game";
 import formatTime from './TimeFormatter';
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 const { Header, Content } = Layout;
 
@@ -17,6 +18,7 @@ let hasGameStarted = false
 let totalTimeLapsed = 0;
 
 const App = () => {
+    const handle = useFullScreenHandle();
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
     const game = useSelector((state) => state.game)
@@ -24,6 +26,7 @@ const App = () => {
     const dispatch = useDispatch()
     const [setTimer]= useState(0);
 
+    
     const startTimer = () => {  
         hasGameStarted = true
         setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration*60)
@@ -114,7 +117,8 @@ const App = () => {
         setOpen(false)
     };
     return (
-        <ConfigProvider
+        <FullScreen handle={handle}>
+            <ConfigProvider
             theme={{
             algorithm: theme.darkAlgorithm,
                 token: {
@@ -127,6 +131,7 @@ const App = () => {
                 pokertimer.gg
                 {/* <h1 className="gameTitle">Poker Tournament</h1>
                 <h3 className="gameSubtitle">£20 + 1 rebuy</h3> */}
+                <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button>
                 <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
                 <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
                     <Tabs
@@ -200,6 +205,8 @@ const App = () => {
             </Content>
         </Layout>
         </ConfigProvider>
+        </FullScreen>
+        
     );
 };
 export default App;
