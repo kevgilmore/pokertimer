@@ -209,6 +209,7 @@ const Tab1Component = () => {
             ...row,
         });
         setDataSource(newData);
+        dispatch(updateBlindLevel(newData))
     };
 
     const columns = defaultColumns.map((col) => {
