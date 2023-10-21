@@ -120,6 +120,16 @@ color: white;
   color: var(--text);
 }
 
+.fullscreenBtn {
+  float: right !important;
+  margin-top: 16px;
+  margin-right: 10px;
+  margin-bottom: auto;
+  background-color: var(--btnDark);
+  width: 50px !important;
+  height: 50px !important;
+}
+
 .settingsBtn {
   float: right !important;
   margin-top: 16px;

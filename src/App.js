@@ -98,17 +98,6 @@ const App = () => {
        return ((timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration*60)) * 100).toFixed(0)
     }
 
-
-    const getTimerControls = () => {
-        return <div>
-            {formatTime(timeLeft)}
-            <br></br>
-            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(-1)} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
-            {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
-            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(+1)} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
-        </div>
-    }
-
     const showDrawer = () => {
         setOpen(true)
     };
@@ -128,18 +117,11 @@ const App = () => {
         >
         <Layout className="mainBg">
             <Header className="navbarBg">
-                pokertimer.gg
-                {/* <h1 className="gameTitle">Poker Tournament</h1>
-                <h3 className="gameSubtitle">£20 + 1 rebuy</h3> */}
-                <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button>
+                pokertimer.gg           
                 <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
+                <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button>
                 <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
-                    <Tabs
-                        centered="true"
-                        type="card"
-                        size="large"
-                        items={[getTab1(), getTab2(), getTab3()]}
-                    />
+                    <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
                 </Drawer>
             </Header>
             <Content>
@@ -149,7 +131,13 @@ const App = () => {
                     <Col span={14}>
                         <div className="timerBox">
                                 <Progress type="circle"
-                                          format={() => getTimerControls()}
+                                          format={() => <div>
+                                            {formatTime(timeLeft)}
+                                            <br></br>
+                                            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(-1)} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
+                                            {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
+                                            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(+1)} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
+                                        </div>}
                                           status="normal"
                                           percent={calculatePercentage()}
                                           size={600}

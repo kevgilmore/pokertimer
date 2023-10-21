@@ -170,7 +170,7 @@ const Tab1Component = () => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={() => handleDelete(record.key)}><DeleteOutlined /></a>
+                    <Button onClick={() => handleDelete(record.key)}><DeleteOutlined /></Button>
                 </Space>
             ),
         },
