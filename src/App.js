@@ -152,13 +152,14 @@ const App = () => {
                     <Col className="prizesColumn" span={10}>
                         <p className="timeRemainingLabel">TOURNAMENT RUNNING TIME</p>
                         <h5 className="totalTimeLapsed">{formatTime(totalTimeLapsed)}</h5>
-                        <Card bordered={false} className="prizesCard" style={{marginTop: 50}}>
+                        <Card bordered={false} className="prizesCard firstPrizeCard">
+                            <span class="rounded-pill">WINNER</span>
                             <h1>{game.currencySymbol}{game.prizes[0]}</h1>
                         </Card>
-                        <Card bordered={false} className="prizesCard">
+                        <Card bordered={false} className="prizesCard secondPrizeCard">
                             <h1>{game.currencySymbol}{game.prizes[1]}</h1>
                         </Card>
-                        <Card bordered={false} className="prizesCard">
+                        <Card bordered={false} className="prizesCard thirdPrizeCard">
                             <h1>{game.currencySymbol}{game.prizes[2]}</h1>
                         </Card>
 

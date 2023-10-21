@@ -8,6 +8,9 @@
   --text: #F1F1F1;
   --greenText: #BCFF66;
   --accent: #666CFF;
+  --firstPrize: #665B32;
+  --secondPrize: #656565;
+  --thirdPrize: #583F22;
 }
 
 .navbarBg {
@@ -110,9 +113,21 @@ color: white;
   margin-left: 75px;
 }
 
+.firstPrizeCard {
+  border: 3px solid var(--firstPrize) !important;
+}
+
+.secondPrizeCard {
+  border: 3px solid var(--secondPrize) !important;
+}
+
+.thirdPrizeCard {
+  border: 3px solid var(--thirdPrize) !important;
+}
+
 .prizesCard {
   background-color: var(--subDark);
-  border: 3px solid var(--stroke);
+  border: 3px solid var(--firstPrize);
   border-radius: 5px;
   margin-bottom: 20px;
   width: 300px;
@@ -122,7 +137,7 @@ color: white;
 
 .fullscreenBtn {
   float: right !important;
-  margin-top: 16px;
+  margin-top: 8px;
   margin-right: 10px;
   margin-bottom: auto;
   background-color: var(--btnDark);
@@ -132,7 +147,7 @@ color: white;
 
 .settingsBtn {
   float: right !important;
-  margin-top: 16px;
+  margin-top: 8px;
   margin-bottom: auto;
   background-color: var(--btnDark);
   width: 50px !important;
