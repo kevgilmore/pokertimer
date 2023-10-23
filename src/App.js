@@ -156,14 +156,22 @@ const App = () => {
                             <h5 className="totalTimeLapsed">{formatTime(totalTimeLapsed)}</h5>
                         </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
-                            <span class="rounded-pill">WINNER</span>
-                            <h1>{game.currencySymbol}{game.prizes[0]}</h1>
+                            <Flex justify="center" align="center">
+                                <h5 className="prizeLabel">1st</h5>
+                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[0]}</h1>
+                            </Flex>
                         </Card>
                         <Card bordered={false} className="prizesCard secondPrizeCard">
-                            <h1>{game.currencySymbol}{game.prizes[1]}</h1>
+                            <Flex justify="center" align="center">
+                                <h5 className="prizeLabel">2nd</h5>
+                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[1]}</h1>
+                            </Flex>
                         </Card>
                         <Card bordered={false} className="prizesCard thirdPrizeCard">
-                            <h1>{game.currencySymbol}{game.prizes[2]}</h1>
+                            <Flex justify="center" align="center">
+                                <h5 className="prizeLabel">3rd</h5>
+                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[2]}</h1>
+                            </Flex>
                         </Card>
                     </Col>
                 </Row>

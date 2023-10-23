@@ -97,6 +97,21 @@ body > #root > div {
   border: 3px solid var(--thirdPrize) !important;
 }
 
+.prizeLabel {
+  margin-right: 30px;
+  font-size: 20px;
+}
+
+.prizeText {
+  font-size: 50px;
+  margin: 0 40px 0 0 !important;
+}
+
+.prizesCard > .ant-card-body {
+  padding: 10px 0 10px 0 !important;
+}
+
+
 .prizesCard {
   background-color: var(--subDark);
   border: 3px solid var(--firstPrize);
