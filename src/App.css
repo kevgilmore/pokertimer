@@ -186,20 +186,24 @@ body > #root > div {
 }
 
 .activeBlindLeveltext {
-  width: 100%;
+  width: 90%;
   font-size: 50px;
   margin: 0;
-}
-
-.activeBlindGreenTextLabel {
-  margin: 0;
-  padding-top: 10px;
+  padding-left: 40px;
 }
 
 .activeBlindGreenText {
   margin: 0;
+  margin-top: -5px;
+  padding-bottom: 5px;
+  padding-right: 40px;
   font-size: 70px;
   color: var(--greenText);
+}
+
+.buyinText {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /*SETTINGS PAGE*/

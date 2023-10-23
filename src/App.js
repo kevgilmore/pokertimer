@@ -1,7 +1,7 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex} from 'antd';
 import {useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
@@ -187,16 +187,22 @@ const App = () => {
                                 {game.currentBlindLevel > game.blindStructure.length - 2? <h4>END</h4> : null}
                             </Col>
                             <div className="verticalLine"></div>
-                            <Col className="flexBoxCol" span={10}>
+                            <Col className="flexBoxCol" span={8}>
                                 <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
                             </Col>
-                            <Col span={6}>
+                            <Col span={8}>
                                 {/* <h4 className="activeBlindGreenTextLabel">BLINDS</h4> */}
                                 <h1 className="activeBlindGreenText">
                                     {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
                                 </h1>
                             </Col>
-                            <Col span={5}></Col>
+                            <Col span={5}>
+                                <Flex style={{paddingTop: '20px'}} justify="center" align="center">
+                                    <Button type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
+                                    <h2 className="buyinText">Buy-ins</h2>
+                                    <Button type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
+                                </Flex>
+                            </Col>
                         </Row>
                     </Card>
                 </Row>
