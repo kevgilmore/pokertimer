@@ -1,5 +1,5 @@
 import './App.css'
-import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs} from 'antd';
+import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex} from 'antd';
 import {useState} from 'react';
 import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
@@ -108,13 +108,13 @@ const App = () => {
     return (
         <FullScreen handle={handle}>
             <ConfigProvider
-            theme={{
-            algorithm: theme.darkAlgorithm,
-                token: {
-                    colorPrimary: '#666CFF',
-                },
-            }}
-        >
+                theme={{
+                algorithm: theme.darkAlgorithm,
+                    token: {
+                        colorPrimary: '#666CFF',
+                    },
+                }}
+            >
         <Layout className="mainBg">
             <Header className="navbarBg">
                 pokertimer.gg           
@@ -131,8 +131,9 @@ const App = () => {
                     <Col span={14}>
                         <div className="timerBox">
                                 <Progress type="circle"
-                                          format={() => <div>
-                                            {formatTime(timeLeft)}
+                                          format={() => 
+                                        <div className="timerControls">
+                                            <span className="mainCountdownText">{formatTime(timeLeft)}</span>
                                             <br></br>
                                             {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(-1)} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
                                             {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
@@ -150,8 +151,10 @@ const App = () => {
 
                     {/*Prizes column*/}
                     <Col className="prizesColumn" span={10}>
-                        <p className="timeRemainingLabel">TOURNAMENT RUNNING TIME</p>
-                        <h5 className="totalTimeLapsed">{formatTime(totalTimeLapsed)}</h5>
+                        <Flex vertical justify="center">
+                            <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
+                            <h5 className="totalTimeLapsed">{formatTime(totalTimeLapsed)}</h5>
+                        </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
                             <span class="rounded-pill">WINNER</span>
                             <h1>{game.currencySymbol}{game.prizes[0]}</h1>
@@ -162,7 +165,6 @@ const App = () => {
                         <Card bordered={false} className="prizesCard thirdPrizeCard">
                             <h1>{game.currencySymbol}{game.prizes[2]}</h1>
                         </Card>
-
                     </Col>
                 </Row>
                 <Row>

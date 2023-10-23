@@ -13,17 +13,117 @@
   --thirdPrize: #583F22;
 }
 
+body > #root > div {
+  height: 100vh;
+}
+
+/* --- TOP NAVBAR --- */
+
 .navbarBg {
   background-color: var(--navbarDark);
 }
+
+.fullscreenBtn {
+  float: right !important;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-bottom: auto;
+  background-color: var(--btnDark);
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.settingsBtn {
+  float: right !important;
+  margin-top: 8px;
+  margin-bottom: auto;
+  background-color: var(--btnDark);
+  width: 50px !important;
+  height: 50px !important;
+}
+
+/* --- BACKGROUND --- */
 
 .mainBg {
   background-color: var(--mainDark);
 }
 
+/* --- MAIN COUNTDOWN TIMER --- */
+
 .timerBox {
   padding: 0 0 20px 100px;
 }
+
+.ant-progress-text {
+  margin-top: 60px !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 150px !important;
+}
+
+/* --- PRIZE BOXES --- */
+
+.prizesColumn {
+  margin-top: 20px;
+}
+
+.timeLapsedLabel {
+  color: white;
+  font-weight: bold;
+  padding-left: 50px;
+}
+
+.totalTimeLapsed {
+  font-size: 20px;
+  background-color: var(--subDark);
+  color: lightgray;
+  border: 2px solid white;
+  width: 75px;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  margin: 10px 0 25px 115px;
+}
+
+.firstPrizeCard {
+  border: 3px solid var(--firstPrize) !important;
+}
+
+.secondPrizeCard {
+  border: 3px solid var(--secondPrize) !important;
+}
+
+.thirdPrizeCard {
+  border: 3px solid var(--thirdPrize) !important;
+}
+
+.prizesCard {
+  background-color: var(--subDark);
+  border: 3px solid var(--firstPrize);
+  border-radius: 5px;
+  margin-bottom: 20px;
+  width: 300px;
+  text-align: center;
+  color: var(--text);
+}
+
+.footer {
+  background-color: var(--footerDark);
+  margin-top: 1rem;
+  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+@media (max-width: 1250px) {
+  .prizesColumn {
+    padding-left: 70px;
+  }
+}
+
+/* --- CURRENT BLIND CARD --- */
 
 .flexBoxCol {
   display: flex;
@@ -87,88 +187,17 @@
   color: var(--greenText);
 }
 
-.ant-progress-text {
-  margin-top: 60px !important;
-  color: white !important;
-  font-weight: bold !important;
-  font-size: 120px !important;
-}
-
-.prizesColumn {
-  margin-top: 20px;
-}
-
-.timeRemainingLabel {
-color: white;
-}
-
-.totalTimeLapsed {
-  background-color: var(--subDark);
-  color: lightgray;
-  border: 2px solid white;
-  width: 75px;
-  border-radius: 5px;
-  padding: 5px;
-  text-align: center;
-  margin-left: 75px;
-}
-
-.firstPrizeCard {
-  border: 3px solid var(--firstPrize) !important;
-}
-
-.secondPrizeCard {
-  border: 3px solid var(--secondPrize) !important;
-}
-
-.thirdPrizeCard {
-  border: 3px solid var(--thirdPrize) !important;
-}
-
-.prizesCard {
-  background-color: var(--subDark);
-  border: 3px solid var(--firstPrize);
-  border-radius: 5px;
-  margin-bottom: 20px;
-  width: 300px;
-  text-align: center;
-  color: var(--text);
-}
-
-.fullscreenBtn {
-  float: right !important;
-  margin-top: 8px;
-  margin-right: 10px;
-  margin-bottom: auto;
-  background-color: var(--btnDark);
-  width: 50px !important;
-  height: 50px !important;
-}
-
-.settingsBtn {
-  float: right !important;
-  margin-top: 8px;
-  margin-bottom: auto;
-  background-color: var(--btnDark);
-  width: 50px !important;
-  height: 50px !important;
-}
-
-.footer {
-  background-color: var(--footerDark);
-  margin-top: 1rem;
-  padding: 1rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
 /*SETTINGS PAGE*/
 .editable-cell-value-wrap {
   border: 2px solid var(--stroke);
   border-radius: 5px;
   padding: 5px;
+}
+
+.changeAllBtn {
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-bottom: 10px;
 }
 
 .addNewLevelBtn {

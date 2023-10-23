@@ -7,7 +7,7 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Space, Table, Form, Input } from 'antd';
+import { Button, Space, Table, Form, Input, Flex } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/game";
@@ -242,6 +242,15 @@ const Tab1Component = () => {
     };
     return (
         <DndContext onDragEnd={onDragEnd}>
+          {/* <h3>Set blind level time</h3> */}
+            <Flex justify="center" align="center">
+              <Button className="changeAllBtn" type="default">5 mins</Button>
+              <Button className="changeAllBtn" type="default">10 mins</Button>
+              <Button className="changeAllBtn" type="default">15 mins</Button>
+              <Button className="changeAllBtn" type="primary">20 mins</Button>
+              <Button className="changeAllBtn" type="default">30 mins</Button>
+            </Flex>
+            
             <div className="tableHeaderLabels">
                 <p className="tableHeaderItem">SMALL</p>
                 <p className="tableHeaderItem">BIG</p>
