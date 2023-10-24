@@ -77,7 +77,7 @@ body > #root > div {
   font-size: 20px;
   background-color: var(--subDark);
   color: lightgray;
-  border: 2px solid white;
+  border: 2px solid var(--stroke);
   width: 75px;
   border-radius: 5px;
   padding: 5px;
@@ -111,10 +111,8 @@ body > #root > div {
   padding: 10px 0 10px 0 !important;
 }
 
-
 .prizesCard {
   background-color: var(--subDark);
-  border: 3px solid var(--firstPrize);
   border-radius: 5px;
   margin-bottom: 20px;
   width: 300px;
@@ -287,4 +285,36 @@ background-color: var(--mainDark) !important;
 .ant-tabs-tab-btn {
   color: lightgray !important;
   font-weight: bold;
+}
+
+/* -- PAGE 2 -- */
+.prizePoolTotal {
+  display: flow-root;
+  width: 72%;
+  padding-left: 65px;
+}
+
+.prizePoolTotalLine {
+  border: 1px solid var(--stroke);
+  width: 400px;
+}
+
+.payoutslabels {
+  padding-left: 70px;
+  padding-top: 10px;;
+}
+
+.payoutslabels > h4:nth-child(2) {
+  padding-top: 15px;
+}
+
+.payoutslabels > h4:nth-child(3) {
+  padding-top: 15px;
+}
+
+.payoutsBox {
+  background-color: var(--subDark);
+  /* border: 2px solid var(--stroke); */
+  border-radius: 5px;
+  padding: 10px;
 }

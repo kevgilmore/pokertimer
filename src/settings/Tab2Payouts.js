@@ -6,6 +6,7 @@ import {
   Space,
   Form,
   Input,
+  InputNumber,
   Slider,
   Flex,
   Col,
@@ -110,10 +111,12 @@ const Tab2Component = () => {
     <Form
       name="basic"
       labelCol={{
-        span: 8,
+        span: 6, 
+        offset: 3
       }}
       wrapperCol={{
-        span: 16,
+        span: 6,
+        offset: 9,
       }}
       style={{
         maxWidth: 600,
@@ -124,6 +127,7 @@ const Tab2Component = () => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
+      labelAlign="left"
     >
       <Dropdown menu={menuProps}>
         <Button>
@@ -135,59 +139,69 @@ const Tab2Component = () => {
       </Dropdown>
 
       <Form.Item label="Number of players" name="numPlayers">
-        <Input
-          onChange={(e) => {
-            dispatch(updateNumOfPlayers(e.target.value));
+        <InputNumber
+          onChange={(value) => {
+            dispatch(updateNumOfPlayers(value));
           }}
           value={game.numOfPlayers}
           defaultValue={game.numOfPlayers}
+          style={{width: 70, backgroundColor: "#202020"}}
+          bordered={false}
+          stringMode={false}
         />
       </Form.Item>
 
       <Form.Item label="Buy-in price" name="buyinPrice">
-        <Input
-          onChange={(e) => {
-            dispatch(updateBuyinPrice(e.target.value));
+        <InputNumber
+          onChange={(value) => {
+            dispatch(updateBuyinPrice(value));
           }}
           value={game.buyInPrice}
           defaultValue={game.buyInPrice}
 					prefix={game.currencySymbol}
+          style={{width: 70, backgroundColor: "#202020"}}
+          bordered={false}
+          stringMode={false}
         />
       </Form.Item>
 			
       <Form.Item label="Expenses" name="expenses">
-        <Input
-          onChange={(e) => {
-            dispatch(updateExpenses(e.target.value));
+        <InputNumber
+          onChange={(value) => {
+            dispatch(updateExpenses(value));
           }}
           value={game.expenses}
           defaultValue={game.expenses}
 					prefix={game.currencySymbol}
+          style={{width: 70, backgroundColor: "#202020"}}
+          bordered={false}
+          stringMode={false}
         />
       </Form.Item>
-
-      <hr></hr>
-      <Row justify={"space-between"} align={"middle"}>
-        <Col>
-          <h4>Total Prize Pool: </h4>
-        </Col>
-        <Col>
-          <span>{game.currencySymbol} {prizePool}</span>
-        </Col>
-      </Row>
-      <hr></hr>
-
-      <h2>Prize Split</h2>
+      
+      
+      <hr className="prizePoolTotalLine"></hr>
+      <div className="prizePoolTotal">
+        <p style={{float: "left"}}>Total Prize Pool: </p>
+        <p style={{float: "right"}}>{game.currencySymbol} {prizePool}</p>
+      </div>
+      <hr className="prizePoolTotalLine"></hr>
+      <h2 style={{textAlign: "center"}}>Prize Split</h2>
       <Row>
-        <Col span={6}></Col>
-        <Col span={12}>
-          <PayoutSlider
-            prizePool={prizePool}
-            index={0}
-            defaultValue={50}
-            updatePercentVal={updatePercentVal}
-						currencySymbol={game.currencySymbol}
-          />
+        <Col span={6} className="payoutslabels">
+          <h4>1st</h4>
+          <h4>2nd</h4>
+          <h4>3rd</h4>
+        </Col>
+        <Col span={14} className="payoutsBox">
+            <PayoutSlider
+              prizePool={prizePool}
+              index={0}
+              defaultValue={50}
+              updatePercentVal={updatePercentVal}
+              currencySymbol={game.currencySymbol}
+            />
+
           <PayoutSlider
             prizePool={prizePool}
             index={1}
@@ -203,7 +217,7 @@ const Tab2Component = () => {
 						currencySymbol={game.currencySymbol}
           />
         </Col>
-        <Col span={6}></Col>
+        <Col span={4}></Col>
       </Row>
       <Flex justify="center" align="center">
         <label style={{ color: sumPercents > 100 ? "red" : "white" }}>

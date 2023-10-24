@@ -5,7 +5,7 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateStartTime} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers, updateStartTime} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -198,9 +198,9 @@ const App = () => {
                             </Col>
                             <Col span={5}>
                                 <Flex style={{paddingTop: '20px'}} justify="center" align="center">
-                                    <Button type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
+                                    <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers-1))} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
                                     <h2 className="buyinText">Buy-ins</h2>
-                                    <Button type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
+                                    <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers+1))} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
                                 </Flex>
                             </Col>
                         </Row>
