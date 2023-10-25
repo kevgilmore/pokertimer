@@ -7,7 +7,7 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Space, Table, Form, Input, Flex } from 'antd';
+import { Button, Space, Table, Form, InputNumber, Flex } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/game";
@@ -63,9 +63,16 @@ const EditableCell = ({
               required: true,
               message: `${title} is required.`,
             },
+            {
+              type: 'number',
+            }
           ]}
         >
-          <Input ref={inputRef} onPressEnter={save} onBlur={save} tabIndex={dataIndex}/>
+          <InputNumber
+            ref={inputRef}
+            stringMode={false}
+            onPressEnter={save} onBlur={save} tabIndex={dataIndex}
+          />
         </Form.Item>
       ) : (
         <div
