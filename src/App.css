@@ -82,31 +82,7 @@ body > #root > div {
   border-radius: 5px;
   padding: 5px;
   text-align: center;
-  margin: 10px 0 5px 115px;
-}
-
-.buyinContainer {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.numBuyinsLabel {
-  color: white;
-  font-weight: bold;
-  padding-left: 50px;
-}
-
-.numBuyins {
-  font-size: 20px;
-  background-color: var(--subDark);
-  color: lightgray;
-  border: 2px solid var(--stroke);
-  width: 75px;
-  border-radius: 5px;
-  padding: 5px;
-  text-align: center;
-  margin: 10px 0 5px 9px;
+  margin: 10px 0 20px 115px;
 }
 
 .firstPrizeCard {

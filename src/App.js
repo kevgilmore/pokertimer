@@ -140,12 +140,7 @@ const App = () => {
                     <Col className="prizesColumn" span={10}>
                         <Flex vertical justify="center">
                             <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
-                            <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5>
-                            <div className="buyinContainer">
-                                <p className="numBuyinsLabel">BUY-INS</p>
-                                <h5 className="numBuyins">{game.numOfPlayers}</h5>
-                            </div>
-  
+                            <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5> 
                         </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
                             <Flex justify="center" align="center">
@@ -191,8 +186,9 @@ const App = () => {
                             </Col>
                             <Col span={5}>
                                 <Flex style={{paddingTop: '20px'}} justify="center" align="center">
+                                    <h2 style={{paddingRight: 15}}>BUY-INS</h2>
                                     <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers-1))} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
-                                    <h2 className="buyinText">Buy-ins</h2>
+                                    <h2 className="buyinText">{game.numOfPlayers}</h2>
                                     <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers+1))} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
                                 </Flex>
                             </Col>
