@@ -20,7 +20,7 @@ export const getTab2 = () => {
 
 export const getTab3 = () => {
     return                             {
-        label: 'Game Setup',
+        label: 'Game',
         key: '3',
         children: tab3Component(),
     }

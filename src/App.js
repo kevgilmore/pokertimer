@@ -5,7 +5,7 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateNumOfPlayers, updateStartTime, updateBlindLevel} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -29,18 +29,18 @@ const App = () => {
         setTimePassed((prev) => prev + 1)
         setTimeLeft((prev) => prev - 1)
         if (timeLeft === 0 && hasNextBlind()) {
-            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+            setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration * 60)
             setTimePassed(0)
             dispatch(changeBlindLevel(game.currentBlindLevel + 1))
         }
     };
 
     const hasNextBlind = () => {
-        return game.currentBlindLevel < game.blindStructure.length
+        return game.currentBlindLevel <= game.blindStructure.length -1
     }
 
     useEffect(() => {
-        if(!isPaused) {
+         if(!isPaused) {
             intervalRef.current = setInterval(decreaseNum, 1000);
         }
         return () => clearInterval(intervalRef.current);
@@ -48,13 +48,17 @@ const App = () => {
     });
 
     const togglePrev = () => {
-        dispatch(changeBlindLevel(game.currentBlindLevel - 1))
-        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+        if (game.currentBlindLevel > 1) {
+            dispatch(changeBlindLevel(game.currentBlindLevel - 1))
+            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+        }
     }
 
     const toggleNext = () => {
-        dispatch(changeBlindLevel(game.currentBlindLevel + 1))
-        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+        if (hasNextBlind()) {
+            dispatch(changeBlindLevel(game.currentBlindLevel + 1))
+            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+        }
     }
 
     const togglePause = () => {
@@ -137,7 +141,11 @@ const App = () => {
                         <Flex vertical justify="center">
                             <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
                             <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5>
-                            {/* <h5 className="totalTimeLapsed">{game.numOfPlayers}</h5> */}
+                            <div className="buyinContainer">
+                                <p className="numBuyinsLabel">BUY-INS</p>
+                                <h5 className="numBuyins">{game.numOfPlayers}</h5>
+                            </div>
+  
                         </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
                             <Flex justify="center" align="center">

@@ -152,8 +152,6 @@ const Tab1Component = () => {
     const dispatch = useDispatch();
     const game = useSelector(state => state.game)
     const [dataSource, setDataSource] = useState(game.blindStructure);
-    
-    console.log("dataSource =", dataSource)
     const [count, setCount] = useState(game.blindStructure.length);
     const [selectedInterval, setSelectedInterval] = useState(20);
     const defaultColumns = [
