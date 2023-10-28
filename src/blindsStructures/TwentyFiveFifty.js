@@ -85,20 +85,8 @@ const twentyFiveFifty = [
     },
     {
         key: '15',
-        small: 3000,
-        big: 6000,
-        duration: 20,
-    },
-    {
-        key: '16',
-        small: 4000,
-        big: 8000,
-        duration: 20,
-    },
-    {
-        key: '17',
-        small: 5000,
-        big: 10000,
+        small: 2500,
+        big: 5000,
         duration: 20,
     }
 ]

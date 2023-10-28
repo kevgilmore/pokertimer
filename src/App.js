@@ -1,101 +1,84 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex} from 'antd';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateNumOfPlayers, updateStartTime} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers, updateStartTime, updateBlindLevel} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 const { Header, Content } = Layout;
-
-let timerInterval = null
-let timePassed = 0
-let isPaused = true
-let hasGameStarted = false
-let totalTimeLapsed = 0;
 
 const App = () => {
     const handle = useFullScreenHandle();
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
     const game = useSelector((state) => state.game)
-    const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration*60);
     const dispatch = useDispatch()
-    const [setTimer]= useState(0);
+    const [totalTournamentTime, setTotalTournamentTime] = useState(0)
 
-    
-    const startTimer = () => {  
-        hasGameStarted = true
-        setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration*60)
-        if (game.currentBlindLevel <=game.blindStructure.length) {// stop running end of array
-            timerInterval = setInterval(() => {
-                console.log("game started?", hasGameStarted);
-                if (!isPaused) {
-                    totalTimeLapsed++
-                    if ((game.blindStructure[game.currentBlindLevel-1].duration*60 - timePassed) > 0) {// not end of level
-                        timePassed++
-                        let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration*60 - timePassed)
-                        setTimeLeft(timeLeft) 
-                    } else { // end of level
-                        if (game.currentBlindLevel <=(game.blindStructure.length - 1)) {// has next blind
-                            setTimer(+1);
-                            changeBlind(+1)
-                        } else {
-                            stopTimer()
-                        }
-                    }
-                }
-            }, 1000)
+    const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
+    const [timePassed, setTimePassed] = useState(0);
+    const [isPaused, setIsPaused] = useState(true);
+    let intervalRef = useRef();
+
+    const decreaseNum = () => {
+        setTotalTournamentTime((prev) => prev + 1)
+        setTimePassed((prev) => prev + 1)
+        setTimeLeft((prev) => prev - 1)
+        if (timeLeft === 0 && hasNextBlind()) {
+            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+            setTimePassed(0)
+            dispatch(changeBlindLevel(game.currentBlindLevel + 1))
         }
+    };
+
+    const hasNextBlind = () => {
+        return game.currentBlindLevel < game.blindStructure.length
     }
 
-   const changeBlind = (change) => {
-       let newBlindLevel = (game.currentBlindLevel + change)
-       if (newBlindLevel > 0 && newBlindLevel <= game.blindStructure.length) {// stop running end of array
-           timePassed = 0
-           dispatch(changeBlindLevel(newBlindLevel))
-           clearInterval(timerInterval)
-           startTimer()
-       }
-   }
+    useEffect(() => {
+        if(!isPaused) {
+            intervalRef.current = setInterval(decreaseNum, 1000);
+        }
+        return () => clearInterval(intervalRef.current);
 
-   const togglePause = () => {
-       isPaused = !isPaused
-       if (isPaused) {
-           setPausePlayIcon(getIcon())
-       } else {
-           setPausePlayIcon(getIcon())
-       }
-       if (!hasGameStarted) { // restarting game
-           timePassed = 0
-           setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration)
-           startTimer()
-        //    dispatch(restartGame())
-        dispatch(updateStartTime(new Date().toISOString()))
-       }
-   }
+    });
+
+    const togglePrev = () => {
+        dispatch(changeBlindLevel(game.currentBlindLevel - 1))
+        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+    }
+
+    const toggleNext = () => {
+        dispatch(changeBlindLevel(game.currentBlindLevel + 1))
+        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+    }
+
+    const togglePause = () => {
+        if (isPaused) {
+            setPausePlayIcon(getIcon())
+            intervalRef.current = setInterval(decreaseNum, 1000);
+        } else {
+            setPausePlayIcon(getIcon())
+            clearInterval(intervalRef.current);
+        }
+        setIsPaused((prev) => !prev);
+    };
+
+    const calculatePercentage = () => {
+       let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed);
+       return (timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration * 60) * 100).toFixed(0)
+    }
 
     const getIcon = () => {
-        if (!isPaused) {
+        if (isPaused) {
             return <PauseOutlined />
         } else {
             return <CaretRightOutlined/>
         }
-    }
-
-   const stopTimer = () => {
-       clearInterval(timerInterval)
-       isPaused = true
-       hasGameStarted = false
-       setPausePlayIcon(getIcon())
-   }
-
-    const calculatePercentage = () => {
-       let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration*60 - timePassed);
-       return ((timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration*60)) * 100).toFixed(0)
     }
 
     const showDrawer = () => {
@@ -103,6 +86,7 @@ const App = () => {
     };
 
     const onClose = () => {
+        setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed)
         setOpen(false)
     };
     return (
@@ -119,7 +103,7 @@ const App = () => {
             <Header className="navbarBg">
                 pokertimer.gg           
                 <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
-                <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button>
+                {/* <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button> */}
                 <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
                     <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
                 </Drawer>
@@ -130,22 +114,21 @@ const App = () => {
                     {/*Timer column*/}
                     <Col span={14}>
                         <div className="timerBox">
-                                <Progress type="circle"
-                                          format={() => 
-                                        <div className="timerControls">
-                                            <span className="mainCountdownText">{formatTime(timeLeft)}</span>
-                                            <br></br>
-                                            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(-1)} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
-                                            {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
-                                            {<Button style={{width: 50, height:50, margin:10}} onClick={() => changeBlind(+1)} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
-                                        </div>}
-                                          status="normal"
-                                          percent={calculatePercentage()}
-                                          size={600}
-                                          strokeWidth={2}
+                            <Progress type="circle"
+                                format={() =>
+                                <div className="timerControls">
+                                    <span className="mainCountdownText">{formatTime(timeLeft)}</span>
+                                    <br></br>
+                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
+                                    {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
+                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
+                                </div>}
+                                    status="normal"
+                                    percent={calculatePercentage()}
+                                    size={600}
+                                    strokeWidth={2}
                                     strokeColor={"#666CFF"}
-                                />
-
+                            />
                         </div>
                     </Col>
 
@@ -153,7 +136,8 @@ const App = () => {
                     <Col className="prizesColumn" span={10}>
                         <Flex vertical justify="center">
                             <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
-                            <h5 className="totalTimeLapsed">{formatTime(totalTimeLapsed)}</h5>
+                            <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5>
+                            {/* <h5 className="totalTimeLapsed">{game.numOfPlayers}</h5> */}
                         </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
                             <Flex justify="center" align="center">
@@ -175,6 +159,8 @@ const App = () => {
                         </Card>
                     </Col>
                 </Row>
+
+                {/* Blinds Panel */}
                 <Row>
                     <Card bordered={false} className="blindsCard">
                         <Row>
@@ -191,7 +177,6 @@ const App = () => {
                                 <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
                             </Col>
                             <Col span={8}>
-                                {/* <h4 className="activeBlindGreenTextLabel">BLINDS</h4> */}
                                 <h1 className="activeBlindGreenText">
                                     {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
                                 </h1>

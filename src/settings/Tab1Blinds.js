@@ -152,7 +152,10 @@ const Tab1Component = () => {
     const dispatch = useDispatch();
     const game = useSelector(state => state.game)
     const [dataSource, setDataSource] = useState(game.blindStructure);
+    
+    console.log("dataSource =", dataSource)
     const [count, setCount] = useState(game.blindStructure.length);
+    const [selectedInterval, setSelectedInterval] = useState(20);
     const defaultColumns = [
         {
             key: 'sort',
@@ -217,6 +220,7 @@ const Tab1Component = () => {
         });
         setDataSource(newData);
         dispatch(updateBlindLevel(newData))
+        setSelectedInterval(null)
     };
 
     const columns = defaultColumns.map((col) => {
@@ -247,15 +251,27 @@ const Tab1Component = () => {
             dispatch(updateBlindLevel(newSortedData))
         }
     };
+    const handleClickInterval = (interval) => {
+      setSelectedInterval(interval)
+      const previousBlindStructure = [...game.blindStructure]
+      const newBlindStructure = previousBlindStructure.map((blind, index) => {
+        return {
+          ...blind,
+          duration: interval
+        }
+      })
+      dispatch(updateBlindLevel(newBlindStructure))
+      setDataSource(newBlindStructure)
+    }
+
     return (
         <DndContext onDragEnd={onDragEnd}>
           {/* <h3>Set blind level time</h3> */}
             <Flex justify="center" align="center">
-              <Button className="changeAllBtn" type="default">5 mins</Button>
-              <Button className="changeAllBtn" type="default">10 mins</Button>
-              <Button className="changeAllBtn" type="default">15 mins</Button>
-              <Button className="changeAllBtn" type="primary">20 mins</Button>
-              <Button className="changeAllBtn" type="default">30 mins</Button>
+              {[5, 10, 15, 20, 30].map(interval => {
+                return <Button key={interval} className="changeAllBtn" type={selectedInterval === interval? "primary" : "default"} onClick={() =>handleClickInterval(interval)}>{interval} mins</Button>
+              })}
+              
             </Flex>
             
             <div className="tableHeaderLabels">
