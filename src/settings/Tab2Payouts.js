@@ -106,7 +106,18 @@ const Tab2Component = () => {
     items,
     onClick: handleMenuClick,
   };
-
+  
+  const InputPlayers = () => {
+    return  <InputNumber
+              onChange={(value) => {
+                dispatch(updateNumOfPlayers(value));
+              }}
+              value={game.numOfPlayers}
+              style={{width: 70, backgroundColor: "#202020"}}
+              bordered={false}
+              stringMode={false}
+            />
+  }
   return (
     <Form
       name="basic"
@@ -122,7 +133,7 @@ const Tab2Component = () => {
         maxWidth: 600,
       }}
       initialValues={{
-        remember: true,
+        numPlayers: game.numOfPlayers,
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -139,18 +150,8 @@ const Tab2Component = () => {
       </Dropdown>
 
       <Form.Item label="Number of players" name="numPlayers">
-        <InputNumber
-          onChange={(value) => {
-            dispatch(updateNumOfPlayers(value));
-          }}
-          value={game.numOfPlayers}
-          defaultValue={game.numOfPlayers}
-          style={{width: 70, backgroundColor: "#202020"}}
-          bordered={false}
-          stringMode={false}
-        />
+        <InputPlayers />
       </Form.Item>
-
       <Form.Item label="Buy-in price" name="buyinPrice">
         <InputNumber
           onChange={(value) => {
