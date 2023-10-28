@@ -16,24 +16,46 @@ const App = () => {
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
     const game = useSelector((state) => state.game)
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const [totalTournamentTime, setTotalTournamentTime] = useState(0)
 
-    const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration);
+    const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
     const [timePassed, setTimePassed] = useState(0);
     const [isPaused, setIsPaused] = useState(true);
     let intervalRef = useRef();
 
     const decreaseNum = () => {
+        setTotalTournamentTime((prev) => prev + 1)
         setTimePassed((prev) => prev + 1)
         setTimeLeft((prev) => prev - 1)
+        if (timeLeft === 0 && hasNextBlind()) {
+            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+            setTimePassed(0)
+            dispatch(changeBlindLevel(game.currentBlindLevel + 1))
+        }
     };
 
+    const hasNextBlind = () => {
+        return game.currentBlindLevel < game.blindStructure.length
+    }
+
     useEffect(() => {
-        if(!isPaused){
+        if(!isPaused) {
             intervalRef.current = setInterval(decreaseNum, 1000);
         }
         return () => clearInterval(intervalRef.current);
-    }, [isPaused]);
+
+    });
+
+    const togglePrev = () => {
+        dispatch(changeBlindLevel(game.currentBlindLevel - 1))
+        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+    }
+
+    const toggleNext = () => {
+        dispatch(changeBlindLevel(game.currentBlindLevel + 1))
+        setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+    }
 
     const togglePause = () => {
         if (isPaused) {
@@ -46,23 +68,9 @@ const App = () => {
         setIsPaused((prev) => !prev);
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const calculatePercentage = () => {
-       let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration - timePassed);
-       return (timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration) * 100).toFixed(0)
+       let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed);
+       return (timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration * 60) * 100).toFixed(0)
     }
 
     const getIcon = () => {
@@ -78,6 +86,7 @@ const App = () => {
     };
 
     const onClose = () => {
+        setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed)
         setOpen(false)
     };
     return (
@@ -94,7 +103,7 @@ const App = () => {
             <Header className="navbarBg">
                 pokertimer.gg           
                 <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
-                <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button>
+                {/* <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button> */}
                 <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
                     <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
                 </Drawer>
@@ -110,9 +119,9 @@ const App = () => {
                                 <div className="timerControls">
                                     <span className="mainCountdownText">{formatTime(timeLeft)}</span>
                                     <br></br>
-                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => "nextBlind"} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
+                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
                                     {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
-                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => "previousBlind()"} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
+                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
                                 </div>}
                                     status="normal"
                                     percent={calculatePercentage()}
@@ -127,7 +136,8 @@ const App = () => {
                     <Col className="prizesColumn" span={10}>
                         <Flex vertical justify="center">
                             <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
-                            <h5 className="totalTimeLapsed">{formatTime(0)}</h5>
+                            <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5>
+                            {/* <h5 className="totalTimeLapsed">{game.numOfPlayers}</h5> */}
                         </Flex>
                         <Card bordered={false} className="prizesCard firstPrizeCard">
                             <Flex justify="center" align="center">
@@ -152,7 +162,7 @@ const App = () => {
 
                 {/* Blinds Panel */}
                 <Row>
-                    {/* <Card bordered={false} className="blindsCard">
+                    <Card bordered={false} className="blindsCard">
                         <Row>
                             <Col className="blindsList" span={2}>
                                 {game.blindStructure.slice(game.currentBlindLevel < 3 ?     0 : game.currentBlindLevel - 2, 
@@ -179,7 +189,7 @@ const App = () => {
                                 </Flex>
                             </Col>
                         </Row>
-                    </Card> */}
+                    </Card>
                 </Row>
 
             </Content>
