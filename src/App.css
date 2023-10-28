@@ -318,3 +318,11 @@ background-color: var(--mainDark) !important;
   border-radius: 5px;
   padding: 10px;
 }
+
+.ant-drawer-body {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.ant-drawer-body::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}

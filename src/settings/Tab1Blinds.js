@@ -11,6 +11,8 @@ import { Button, Space, Table, Form, InputNumber, Flex } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/game";
+import {RemoveScrollBar} from 'react-remove-scroll-bar';
+
 
 const EditableContext = React.createContext(null);
 
@@ -263,7 +265,8 @@ const Tab1Component = () => {
     }
 
     return (
-        <DndContext onDragEnd={onDragEnd}>
+  
+      <DndContext onDragEnd={onDragEnd}>
           {/* <h3>Set blind level time</h3> */}
             <Flex justify="center" align="center">
               {[5, 10, 15, 20, 30].map(interval => {
@@ -284,19 +287,25 @@ const Tab1Component = () => {
                 strategy={verticalListSortingStrategy}
             >
                 <Table
+                className='blindTable'
                     components={components}
                     rowKey="key"
                     columns={columns}
                     dataSource={dataSource}
                     pagination={false}
                     showHeader={false}
-                    size={"middle"}
+                    // scroll={{ x: 400, y: 400 }}
                 />
             </SortableContext>
             <Space>
                 <Button className="addNewLevelBtn" type="primary" onClick={handleAdd} shape="round" size={"large"}>ADD NEW LEVEL</Button>
             </Space>
         </DndContext>
+      
+      
+
+
+        
     )
 };
 export default Tab1Component;
