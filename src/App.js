@@ -1,17 +1,46 @@
 import './App.css'
-import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex} from 'antd';
+import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex, Modal, Form, Input, message} from 'antd';
 import {useEffect, useRef, useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, FullscreenOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
 import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { Footer } from 'antd/es/layout/layout';
+
+const { TextArea } = Input;
 
 const { Header, Content } = Layout;
 
 const App = () => {
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi
+          .open({
+            type: 'loading',
+            content: 'Submitting..',
+            duration: 1.5,
+          })
+          .then(() => message.success('Thank you for submitting this bug', 2.5))
+      };
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+  
+    const handleOk = () => {
+        success()
+        setIsModalOpen(false);
+    };
+  
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
     const handle = useFullScreenHandle();
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
@@ -196,7 +225,30 @@ const App = () => {
                     </Card>
                 </Row>
 
+                <>
+                    {contextHolder}
+                </>
+
+                <Modal title="Is something not working correctly?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <Form>
+                        <Form.Item label="Tell us whats wrong">
+                            <TextArea rows={4} />
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
             </Content>
+            <Footer style={{textAlign: 'center'}}>
+                <Flex justify="space-evenly" align='center'>
+                <Button onClick={showModal} type="primary" icon={<BugOutlined />} size="large">Report a Bug</Button>
+                <span>Pokertimer.gg ©2023 Created with <HeartFilled style={{color: 'red'}}/> in London </span>
+                <div className="coffeeBtn">
+                    <a target="_blank" rel="noreferrer" href="https://www.buymeacoffee.com/kaigo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=kaigo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+                </div>
+                
+                </Flex>
+                
+            </Footer>
         </Layout>
         </ConfigProvider>
         </FullScreen>

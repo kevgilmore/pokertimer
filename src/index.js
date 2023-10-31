@@ -5,6 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './redux/store'
 import { Provider } from 'react-redux'
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-7X1VJ3N2Q0");
+ReactGA.send({ hitType: "pageview", page: "/" });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

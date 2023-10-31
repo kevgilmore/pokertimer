@@ -20,6 +20,7 @@
     "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^18.2.0",
     "react-full-screen": "^1.1.1",
+    "react-ga4": "^2.1.0",
     "react-redux": "^8.0.5",
     "react-remove-scroll-bar": "^2.3.4",
     "react-scripts": "5.0.1",
