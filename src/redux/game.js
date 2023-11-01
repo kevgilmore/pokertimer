@@ -65,10 +65,16 @@ export const gameSlice = createSlice({
             state.currency = update.payload
             state.currencySymbol = getCurrencySymbol(update.payload)
         },
+        updateTitle: (state, update) => {
+            state.title = update.payload
+        },
+        updateSubtitle: (state, update) => {
+            state.subtitle = update.payload
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindStructure, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
+export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindStructure, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency, updateTitle, updateSubtitle } = gameSlice.actions
 
 export default gameSlice.reducer

@@ -46,6 +46,7 @@ const App = () => {
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
     const game = useSelector((state) => state.game)
+    localStorage.setItem('game', JSON.stringify({game}))
     const dispatch = useDispatch()
     const [totalTournamentTime, setTotalTournamentTime] = useState(0)
 
