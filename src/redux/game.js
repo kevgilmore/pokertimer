@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
 
-const initialState = {
+const initialState = localStorage.getItem("game") ? JSON.parse(localStorage.getItem("game")) : {
     title: "",
     subtitle: "",
     startTime: "00:00",

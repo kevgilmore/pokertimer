@@ -5,9 +5,8 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
+import game, {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
 import formatTime from './TimeFormatter';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Footer } from 'antd/es/layout/layout';
 import logo from './logo.png'
 
@@ -42,17 +41,16 @@ const App = () => {
     const handleCancel = () => {
       setIsModalOpen(false);
     };
-    const handle = useFullScreenHandle();
+    const game = useSelector((state) => state.game)
+    const dispatch = useDispatch()
+
     const [open, setOpen] = useState(false);
     const [pausePlayIcon, setPausePlayIcon] = useState(<CaretRightOutlined />)
-    const game = useSelector((state) => state.game)
-    localStorage.setItem('game', JSON.stringify({game}))
-    const dispatch = useDispatch()
     const [totalTournamentTime, setTotalTournamentTime] = useState(0)
-
     const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
     const [timePassed, setTimePassed] = useState(0);
     const [isPaused, setIsPaused] = useState(true);
+
     let intervalRef = useRef();
 
     const decreaseNum = () => {
@@ -71,6 +69,7 @@ const App = () => {
     }
 
     useEffect(() => {
+        localStorage.setItem('game', JSON.stringify(game));
          if(!isPaused) {
             intervalRef.current = setInterval(decreaseNum, 1000);
         }
@@ -125,7 +124,6 @@ const App = () => {
         setOpen(false)
     };
     return (
-        <FullScreen handle={handle}>
             <ConfigProvider
                 theme={{
                 algorithm: theme.darkAlgorithm,
@@ -257,8 +255,6 @@ const App = () => {
             </Footer>
         </Layout>
         </ConfigProvider>
-        </FullScreen>
-        
     );
 };
 export default App;
