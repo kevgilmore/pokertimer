@@ -9,6 +9,7 @@ import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Footer } from 'antd/es/layout/layout';
+import logo from './logo.png'
 
 const { TextArea } = Input;
 
@@ -134,14 +135,17 @@ const App = () => {
             >
         <Layout className="mainBg">
             <Header className="navbarBg">
-                pokertimer.gg           
-                <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
-                {/* <Button className="fullscreenBtn" type="primary" onClick={handle.enter} icon={<FullscreenOutlined />}></Button> */}
-                <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
-                    <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
-                </Drawer>
+                <Flex justify='space-between' >
+                    <a href="/"> <img className="logo" src={logo} alt="logo"></img></a>
+                    <h1 className='gameTitle'>{game.title}</h1>
+                    <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
+                </Flex>
+                <h3 className='gameSubtitle'>{game.subtitle}</h3>
             </Header>
             <Content>
+            <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
+                    <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
+                </Drawer>
                 {/*Main row*/}
                 <Row>
                     {/*Timer column*/}
@@ -238,6 +242,7 @@ const App = () => {
                 </Modal>
 
             </Content>
+            <div className='preFooter'></div>
             <Footer style={{textAlign: 'center'}}>
                 <Flex justify="space-evenly" align='center'>
                 <Button onClick={showModal} type="primary" icon={<BugOutlined />} size="large">Report a Bug</Button>

@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
 
 const initialState = {
+    title: "",
+    subtitle: "",
     startTime: "00:00",
     isSoundEnabled: true,
     blindStructure: twentyFiveFifty,
