@@ -43,7 +43,7 @@ export const gameSlice = createSlice({
         addBlindLevel: (state, update) => {
             state.blindStructure.push(update.payload)
         },
-        updateBlindLevel: (state, update) => { //rename to re-order
+        updateBlindStructure: (state, update) => {
             state.blindStructure = update.payload
         },
         deleteBlindLevel: (state, update) => {
@@ -69,6 +69,6 @@ export const gameSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
+export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindStructure, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency } = gameSlice.actions
 
 export default gameSlice.reducer

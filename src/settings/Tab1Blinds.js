@@ -10,8 +10,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Button, Space, Table, Form, InputNumber, Flex } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {addBlindLevel, updateBlindLevel, deleteBlindLevel} from "../redux/game";
-import {RemoveScrollBar} from 'react-remove-scroll-bar';
+import {addBlindLevel, updateBlindStructure, deleteBlindLevel} from "../redux/game";
 
 
 const EditableContext = React.createContext(null);
@@ -219,7 +218,7 @@ const Tab1Component = () => {
             ...row,
         });
         setDataSource(newData);
-        dispatch(updateBlindLevel(newData))
+        dispatch(updateBlindStructure(newData))
         setSelectedInterval(null)
     };
 
@@ -248,7 +247,7 @@ const Tab1Component = () => {
                 newSortedData = arrayMove(previous, activeIndex, overIndex)
                 return newSortedData
             });
-            dispatch(updateBlindLevel(newSortedData))
+            dispatch(updateBlindStructure(newSortedData))
         }
     };
     const handleClickInterval = (interval) => {
@@ -260,7 +259,7 @@ const Tab1Component = () => {
           duration: interval
         }
       })
-      dispatch(updateBlindLevel(newBlindStructure))
+      dispatch(updateBlindStructure(newBlindStructure))
       setDataSource(newBlindStructure)
     }
 
