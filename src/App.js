@@ -5,19 +5,21 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import game, {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { Footer } from 'antd/es/layout/layout';
 import logo from './logo.png'
+import emailjs from '@emailjs/browser';
 
 const { TextArea } = Input;
 
 const { Header, Content } = Layout;
 
 const App = () => {
+    const [bugForm] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
 
-    const success = () => {
+    const successMsg = () => {
         messageApi
           .open({
             type: 'loading',
@@ -27,20 +29,34 @@ const App = () => {
           .then(() => message.success('Thank you for submitting this bug', 2.5))
       };
 
+    const errorMsg = () => {
+    messageApi.open({
+        type: 'error',
+        content: 'Unable to submit bug, please try again later',
+    });
+    };
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
-        setIsModalOpen(true);
-    };
-  
-    const handleOk = () => {
-        success()
-        setIsModalOpen(false);
-    };
-  
+        setIsModalOpen(true)
+    }
+
+    const handleSubmit = (values) => {
+        emailjs.send('service_165ezka', 'template_csw893k', {text: values.bugDescription}, "rWJ8HzdoJ0n8pPBL6")
+        .then((result) => {
+            setIsModalOpen(false)
+            successMsg()
+        }, (error) => {
+            errorMsg()
+        });
+    }
+
     const handleCancel = () => {
       setIsModalOpen(false);
-    };
+      bugForm.resetFields();
+    }
+
     const game = useSelector((state) => state.game)
     const dispatch = useDispatch()
 
@@ -232,9 +248,27 @@ const App = () => {
                     {contextHolder}
                 </>
 
-                <Modal title="Is something not working correctly?" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                    <Form>
-                        <Form.Item label="Tell us whats wrong">
+                <Modal
+                    open={isModalOpen}
+                    title="Tell us whats wrong"
+                    okText="Submit"
+                    cancelText="Cancel"
+                    onCancel={handleCancel}
+                    onOk={() => {
+                        bugForm
+                        .validateFields()
+                        .then((values) => {
+                            bugForm.resetFields();
+                            handleSubmit(values);
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                    }}
+                    >
+                    <Form
+                        form={bugForm}>
+                        <Form.Item name="bugDescription">
                             <TextArea rows={4} />
                         </Form.Item>
                     </Form>
