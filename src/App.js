@@ -122,6 +122,7 @@ const App = () => {
         dispatch(changeBlindLevel(1))
         setTimeLeft(game.blindStructure[0].duration * 60)
         setTimePassed(0)
+        setTotalTournamentTime(0)
 
         setIsPaused(true)
         setPausePlayIcon(<CaretRightOutlined/>)
