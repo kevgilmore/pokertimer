@@ -124,7 +124,7 @@ const App = () => {
         setTimePassed(0)
 
         setIsPaused(true)
-        setPausePlayIcon(getIcon())
+        setPausePlayIcon(<CaretRightOutlined/>)
         clearInterval(intervalRef.current);
     }
 
