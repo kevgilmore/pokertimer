@@ -1,7 +1,7 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex, Modal, Form, Input, message} from 'antd';
 import {useEffect, useRef, useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled, HistoryOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
@@ -118,6 +118,16 @@ const App = () => {
         setIsPaused((prev) => !prev);
     };
 
+    const resetTimer = () => {
+        dispatch(changeBlindLevel(1))
+        setTimeLeft(game.blindStructure[0].duration * 60)
+        setTimePassed(0)
+
+        setIsPaused(true)
+        setPausePlayIcon(getIcon())
+        clearInterval(intervalRef.current);
+    }
+
     const calculatePercentage = () => {
        let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed);
        return (timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration * 60) * 100).toFixed(0)
@@ -174,6 +184,7 @@ const App = () => {
                                     {<Button style={{width: 50, height:50, margin:10}} onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
                                     {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
                                     {<Button style={{width: 50, height:50, margin:10}} onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
+                                    {<Button className="resetButton" shape="circle" onClick={() => resetTimer()} icon={<HistoryOutlined />} type='primary'></Button>}
                                 </div>}
                                     status="normal"
                                     percent={calculatePercentage()}
