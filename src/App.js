@@ -293,7 +293,7 @@ const App = () => {
             <Footer style={{textAlign: 'center'}}>
                 <Flex justify="space-evenly" align='center'>
                 <Button onClick={showModal} type="primary" icon={<BugOutlined />} size="large">Report a Bug</Button>
-                <span>Pokertimer.gg ©2023 Created with <HeartFilled style={{color: 'red'}}/> in London </span>
+                <span>Pokertimer.gg ©2025 Created with <HeartFilled style={{color: 'red'}}/> in London </span>
                 <div className="coffeeBtn">
                     <a target="_blank" rel="noreferrer" href="https://www.buymeacoffee.com/kaigo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=kaigo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
                 </div>

@@ -148,7 +148,7 @@ const Tab2Component = () => {
         </Button>
       </Dropdown>
 
-      <Form.Item label="Number of players" name="numPlayers">
+      <Form.Item label="Number of Buy-ins" name="numPlayers">
         <InputPlayers />
       </Form.Item>
       <Form.Item label="Buy-in price" name="buyinPrice">
