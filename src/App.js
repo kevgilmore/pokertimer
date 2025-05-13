@@ -18,7 +18,7 @@ const { TextArea } = Input;
 const { Header, Content } = Layout;
 
 const App = () => {
-        const [bugForm] = Form.useForm();
+    const [bugForm] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
 
     const successMsg = () => {
@@ -59,6 +59,7 @@ const App = () => {
       bugForm.resetFields();
     }
 
+    const ONE_SECOND = 1000;
     const game = useSelector((state) => state.game)
     const dispatch = useDispatch()
 
@@ -68,10 +69,32 @@ const App = () => {
     const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
     const [timePassed, setTimePassed] = useState(0);
     const [isPaused, setIsPaused] = useState(true);
+    const [startTime, setStartTime] = useState(null);
 
     let intervalRef = useRef();
 
-    const decreaseNum = () => {
+    useEffect(() => {
+        localStorage.setItem('game', JSON.stringify(game));
+         if(!isPaused) {
+            intervalRef.current = setInterval(updateTimer, ONE_SECOND);
+        }
+        return () => clearInterval(intervalRef.current);
+
+    });
+
+    const startGame = () => {
+        setStartTime(new Date());
+        setPausePlayIcon(getIcon());
+        intervalRef.current = setInterval(updateTimer, ONE_SECOND);
+
+        // Google Analytics event
+        ReactGA.event({
+            category: 'Game',
+            action: 'start_new_game',
+        });
+    };
+
+    const updateTimer = () => {
         setTotalTournamentTime((prev) => prev + 1)
         setTimePassed((prev) => prev + 1)
         setTimeLeft((prev) => prev - 1)
@@ -86,14 +109,20 @@ const App = () => {
         return game.currentBlindLevel <= game.blindStructure.length -1
     }
 
-    useEffect(() => {
-        localStorage.setItem('game', JSON.stringify(game));
-         if(!isPaused) {
-            intervalRef.current = setInterval(decreaseNum, 1000);
+    const togglePause = () => {
+        if (isPaused) {
+            if (!startTime) {
+                startGame();
+            } else {
+                setPausePlayIcon(getIcon());
+                intervalRef.current = setInterval(updateTimer, ONE_SECOND);
+            }
+        } else {
+            setPausePlayIcon(getIcon());
+            clearInterval(intervalRef.current);
         }
-        return () => clearInterval(intervalRef.current);
-
-    });
+        setIsPaused((prev) => !prev);
+    };
 
     const togglePrev = () => {
         if (game.currentBlindLevel > 1) {
@@ -108,17 +137,6 @@ const App = () => {
             setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
         }
     }
-
-    const togglePause = () => {
-        if (isPaused) {
-            setPausePlayIcon(getIcon())
-            intervalRef.current = setInterval(decreaseNum, 1000);
-        } else {
-            setPausePlayIcon(getIcon())
-            clearInterval(intervalRef.current);
-        }
-        setIsPaused((prev) => !prev);
-    };
 
     const resetTimer = () => {
         dispatch(changeBlindLevel(1))
@@ -295,7 +313,7 @@ const App = () => {
                 <Button onClick={showModal} type="primary" icon={<BugOutlined />} size="large">Report a Bug</Button>
                 <span>Pokertimer.gg ©2025 Created with <HeartFilled style={{color: 'red'}}/> in London </span>
                 <div className="coffeeBtn">
-                    <a target="_blank" rel="noreferrer" href="https://www.buymeacoffee.com/kaigo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=kaigo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+                    <a target="_blank" rel="noreferrer" href="https://www.buymeacoffee.com/kaigo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=kaigo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="bymecoffee"/></a>
                 </div>
                 
                 </Flex>

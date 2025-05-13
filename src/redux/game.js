@@ -4,7 +4,7 @@ import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
 const initialState = localStorage.getItem("game") ? JSON.parse(localStorage.getItem("game")) : {
     title: "",
     subtitle: "",
-    startTime: "00:00",
+    startTime: "",
     isSoundEnabled: true,
     blindStructure: twentyFiveFifty,
     currentBlindLevel: 1,
