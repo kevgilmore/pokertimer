@@ -5,7 +5,7 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateNumOfPlayers} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers, updateStartTime} from "./redux/game";
 import formatTime from './TimeFormatter';
 import { Footer } from 'antd/es/layout/layout';
 import logo from './logo.png'
@@ -69,7 +69,6 @@ const App = () => {
     const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
     const [timePassed, setTimePassed] = useState(0);
     const [isPaused, setIsPaused] = useState(true);
-    const [startTime, setStartTime] = useState(null);
 
     let intervalRef = useRef();
 
@@ -83,7 +82,9 @@ const App = () => {
     });
 
     const startGame = () => {
-        setStartTime(new Date());
+        const currentTime = new Date().toISOString();
+        console.log("Start game called", currentTime);
+        dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
 
@@ -111,7 +112,7 @@ const App = () => {
 
     const togglePause = () => {
         if (isPaused) {
-            if (!startTime) {
+            if (!game.startTime) {
                 startGame();
             } else {
                 setPausePlayIcon(getIcon());
@@ -143,6 +144,7 @@ const App = () => {
         setTimeLeft(game.blindStructure[0].duration * 60)
         setTimePassed(0)
         setTotalTournamentTime(0)
+        dispatch(updateStartTime(null))
 
         setIsPaused(true)
         setPausePlayIcon(<CaretRightOutlined/>)
