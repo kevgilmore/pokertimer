@@ -53,7 +53,8 @@ const App = () => {
         .then(() => {
             setIsModalOpen(false)
             successMsg()
-        }, () => {
+        }, (error) => {
+            console.log('Error sending email:', error);
             errorMsg()
         });
     }
