@@ -305,7 +305,11 @@ const App = () => {
                     >
                     <Form
                         form={bugForm}>
-                        <Form.Item name="bugDescription">
+                        <Form.Item name="bugDescription"
+                                rules={[
+                                    { required: true, message: 'Please describe the bug before submitting.' }
+                                ]}
+                        >
                             <TextArea rows={4} />
                         </Form.Item>
                     </Form>
