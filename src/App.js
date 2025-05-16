@@ -91,11 +91,7 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
-
-        ReactGA.event({
-            category: 'Game',
-            action: 'start_new_game',
-        });
+        ReactGA.event('start_new_game');
     };
 
     const updateTimer = () => {
@@ -287,7 +283,7 @@ const App = () => {
 
                 <Modal
                     open={isModalOpen}
-                    title="Tell us whats wrong"
+                    title="Tell us what's wrong"
                     okText="Submit"
                     cancelText="Cancel"
                     onCancel={handleCancel}
