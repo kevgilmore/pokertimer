@@ -8,3 +8,10 @@
 
 1. `npm install`
 2. `npm run start`
+
+Optional set env vars in `.env`
+
+```
+BROWSER=none
+FAST_REFRESH=false
+```
