@@ -17,6 +17,10 @@ jobs:
                   npm install
             - name: npm Build
               working-directory: .
+              env:
+                  REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.REACT_APP_EMAILJS_SERVICE_ID }}
+                  REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_TEMPLATE_ID }}
+                  REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.REACT_APP_EMAILJS_PUBLIC_KEY }}
               run: |
                   CI=false npm run build
             - name: Deploy to S3

@@ -45,11 +45,15 @@ const App = () => {
     }
 
     const handleSubmit = (values) => {
-        emailjs.send('service_165ezka', 'template_csw893k', {text: values.bugDescription}, "rWJ8HzdoJ0n8pPBL6")
-        .then((result) => {
+        emailjs.send(
+            process.env.REACT_APP_EMAILJS_SERVICE_ID,
+            process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+            { text: values.bugDescription },
+            process.env.REACT_APP_EMAILJS_PUBLIC_KEY)
+        .then(() => {
             setIsModalOpen(false)
             successMsg()
-        }, (error) => {
+        }, () => {
             errorMsg()
         });
     }
@@ -88,7 +92,6 @@ const App = () => {
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
 
-        // Google Analytics event
         ReactGA.event({
             category: 'Game',
             action: 'start_new_game',
