@@ -15,6 +15,8 @@ import ReactGA from 'react-ga4'
 ReactGA.initialize("G-LF54WR0EQP");
 
 console.log('Service ID:', process.env.REACT_APP_EMAILJS_SERVICE_ID);
+console.log('Template ID:', process.env.REACT_APP_EMAILJS_TEMPLATE_ID);
+console.log('Public key:', process.env.REACT_APP_EMAILJS_PUBLIC_KEY);
 
 const { TextArea } = Input;
 const { Header, Content } = Layout;
@@ -47,8 +49,6 @@ const App = () => {
     }
 
     const handleSubmit = (values) => {
-        console.log('Service ID again:', process.env.REACT_APP_EMAILJS_SERVICE_ID);
-        console.log('Template ID again:', process.env.REACT_APP_EMAILJS_TEMPLATE_ID);
         emailjs.send(
             process.env.REACT_APP_EMAILJS_SERVICE_ID,
             process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
