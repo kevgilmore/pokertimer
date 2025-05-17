@@ -12,6 +12,8 @@ import logo from './logo.png'
 import emailjs from '@emailjs/browser';
 import ReactGA from 'react-ga4'
 
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({ 'debug_mode': true });
 ReactGA.initialize("G-LF54WR0EQP");
 
 const { TextArea } = Input;
@@ -22,7 +24,16 @@ const App = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
-        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+        ReactGA.send("pageview");
+        window.gtag('event', 'test_event', { test_param: 'test' });
+        ReactGA.event({
+            category: 'User Interaction',
+            action: 'start_new_game',
+        });
+
+        ReactGA.event('start_new_game2', {
+            category: 'User Interaction',
+        });
     }, []);
 
     const successMsg = () => {
@@ -95,15 +106,6 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
-
-        // ReactGA.event({
-        //     category: 'User Interaction',
-        //     action: 'start_new_game',
-        // });
-
-        // ReactGA.event('start_new_game2', {
-        //     category: 'User Interaction',
-        // });
     };
 
     const updateTimer = () => {
