@@ -91,7 +91,12 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
-        ReactGA.event('start_new_game');
+
+        ReactGA.event({
+            category: 'Game',
+            action: 'start_new_game',
+        });
+        ReactGA.event('start_new_game2');
     };
 
     const updateTimer = () => {
