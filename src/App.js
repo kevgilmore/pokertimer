@@ -18,6 +18,16 @@ const App = () => {
     const [bugForm] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
 
+    useEffect(() => {
+        console.log("gtag: ", window.gtag);
+        if (window.gtag) {
+            window.gtag('event', 'page_view', {
+                page_path: window.location.pathname + window.location.search,
+                page_title: document.title,
+            });
+        }
+    }, []);
+
     const successMsg = () => {
         messageApi
           .open({
