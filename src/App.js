@@ -10,11 +10,6 @@ import formatTime from './TimeFormatter';
 import { Footer } from 'antd/es/layout/layout';
 import logo from './logo.png'
 import emailjs from '@emailjs/browser';
-import ReactGA from 'react-ga4'
-
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({ 'debug_mode': true });
-ReactGA.initialize("G-LF54WR0EQP");
 
 const { TextArea } = Input;
 const { Header, Content } = Layout;
@@ -22,11 +17,6 @@ const { Header, Content } = Layout;
 const App = () => {
     const [bugForm] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
-
-    useEffect(() => {
-        ReactGA.send({ hitType: "pageview", page: "/index", title: "Home" });
-        ReactGA.event({category: "your category",action: "your action"});
-    }, []);
 
     const successMsg = () => {
         messageApi
