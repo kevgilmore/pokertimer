@@ -19,7 +19,6 @@ const App = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
-        console.log("gtag: ", window.gtag);
         if (window.gtag) {
             window.gtag('event', 'page_view', {
                 page_path: window.location.pathname + window.location.search,
@@ -97,6 +96,7 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
+        console.log("gtag: ", window.gtag);
         if (window.gtag) {
             window.gtag('event', 'start_new_game', {
                 event_category: 'game',
