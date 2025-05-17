@@ -74,7 +74,6 @@ const App = () => {
     let intervalRef = useRef();
 
     useEffect(() => {
-        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         localStorage.setItem('game', JSON.stringify(game));
          if(!isPaused) {
             intervalRef.current = setInterval(updateTimer, ONE_SECOND);
