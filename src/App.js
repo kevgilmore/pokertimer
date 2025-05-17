@@ -18,6 +18,7 @@ const { TextArea } = Input;
 const { Header, Content } = Layout;
 
 const App = () => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     const [bugForm] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -77,8 +78,6 @@ const App = () => {
     let intervalRef = useRef();
 
     useEffect(() => {
-        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
-
         localStorage.setItem('game', JSON.stringify(game));
          if(!isPaused) {
             intervalRef.current = setInterval(updateTimer, ONE_SECOND);
@@ -87,7 +86,7 @@ const App = () => {
     });
 
     const startGame = () => {
-        const currentTime = new Date().toISOString();
+        let currentTime = new Date().toISOString();
         console.log("Start game called", currentTime);
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
@@ -96,6 +95,10 @@ const App = () => {
         ReactGA.event({
             category: 'User Interaction',
             action: 'start_new_game',
+        });
+
+        ReactGA.event('start_new_game2', {
+            category: 'User Interaction',
         });
     };
 
