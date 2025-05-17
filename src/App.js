@@ -24,16 +24,8 @@ const App = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
-        ReactGA.send("pageview");
-        window.gtag('event', 'test_event', { test_param: 'test' });
-        ReactGA.event({
-            category: 'User Interaction',
-            action: 'start_new_game',
-        });
-
-        ReactGA.event('start_new_game2', {
-            category: 'User Interaction',
-        });
+        ReactGA.send({ hitType: "pageview", page: "/index", title: "Home" });
+        ReactGA.event({category: "your category",action: "your action"});
     }, []);
 
     const successMsg = () => {
