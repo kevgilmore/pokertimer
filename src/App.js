@@ -97,6 +97,13 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
+        if (window.gtag) {
+            window.gtag('event', 'start_new_game', {
+                event_category: 'game',
+                event_label: 'Start New Game',
+                start_time: currentTime,
+            });
+        }
     };
 
     const updateTimer = () => {
