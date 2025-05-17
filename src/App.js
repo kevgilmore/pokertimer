@@ -99,7 +99,7 @@ const App = () => {
         console.log("gtag: ", window.gtag);
         if (window.gtag) {
             window.gtag('event', 'start_new_game', {
-                event_category: 'game',
+                event_category: 'User Interaction',
                 event_label: 'Start New Game',
                 start_time: currentTime,
             });
