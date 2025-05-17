@@ -93,10 +93,9 @@ const App = () => {
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
 
         ReactGA.event({
-            category: 'Game',
+            category: 'User Interaction',
             action: 'start_new_game',
         });
-        ReactGA.event('start_new_game2');
     };
 
     const updateTimer = () => {
