@@ -51,6 +51,13 @@ const App = () => {
     }
 
     const handleSubmit = (values) => {
+        if (window.gtag) {
+            window.gtag('event', 'submit_bug', {
+                event_category: 'User Interaction',
+                event_label: 'Submit_bug',
+                start_time: currentTime,
+            });
+        }
         emailjs.send(
             process.env.REACT_APP_EMAILJS_SERVICE_ID,
             process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
@@ -96,7 +103,6 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
-        console.log("gtag: ", window.gtag);
         if (window.gtag) {
             window.gtag('event', 'start_new_game', {
                 event_category: 'User Interaction',
