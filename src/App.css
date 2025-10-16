@@ -349,16 +349,24 @@ body > #root > div {
   }
 }
 
-/* Subtle improvements for large screens including iPad Pro */
-@media (min-width: 1300px) {
+/* Desktop override to fix iPad Pro changes affecting desktop */
+@media (min-width: 1200px) and (max-width: 1299px) {
   .ant-progress-circle {
-    width: 820px !important;
-    height: 820px !important;
+    width: 220px !important;
+    height: 220px !important;
+  }
+}
+
+/* Subtle improvements for large screens including iPad Pro */
+@media (min-width: 1300px) and (max-width: 1365px) {
+  .ant-progress-circle {
+    width: 250px !important;
+    height: 250px !important;
   }
 
   .mainCountdownText {
-    font-size: 220px !important;
-    margin-bottom: 28px !important;
+    font-size: 70px !important;
+    margin-bottom: 12px !important;
   }
 
   .timerButtons {
@@ -1477,17 +1485,17 @@ background-color: var(--mainDark) !important;
 /* ULTRA SPECIFIC OVERRIDE FOR IPAD PRO LANDSCAPE ONLY */
 @media (min-width: 1366px) and (orientation: landscape) {
   .ant-progress-circle {
-    width: 450px !important;
-    height: 450px !important;
+    width: 520px !important;
+    height: 520px !important;
   }
   
   .mainCountdownText {
-    font-size: 100px !important;
+    font-size: 120px !important;
     margin-bottom: 12px !important;
   }
   
   .blindsPanelContainer {
-    margin: 3% auto 0.1% auto !important;
+    margin: 5% auto 0.1% auto !important;
     width: 95% !important;
     max-width: none !important;
     transform: none !important;
@@ -1538,11 +1546,20 @@ background-color: var(--mainDark) !important;
   }
   
   .activeBlindGreenText {
-    font-size: 60px !important;
+    font-size: 80px !important;
   }
   
   .prizesColumn {
     transform: translateX(-15px) !important;
+  }
+  
+  .prizeCard {
+    width: 200px !important;
+    height: 120px !important;
+  }
+  
+  .prizeText {
+    font-size: 18px !important;
   }
   
   .prizesCard {
@@ -1555,5 +1572,48 @@ background-color: var(--mainDark) !important;
   
   .prizeLabel {
     font-size: 20px !important;
+  }
+}
+
+/* Reduce timer circle for very large screens */
+@media (min-width: 1680px) {
+  .ant-progress-circle {
+    width: 380px !important;
+    height: 380px !important;
+  }
+}
+
+/* ULTRA SPECIFIC DESKTOP OVERRIDE - MUST BE LAST */
+@media (min-width: 1200px) and (max-width: 1365px) {
+  .ant-progress-circle {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
+
+/* EVEN MORE SPECIFIC - TARGET EXACT DESKTOP RANGES */
+@media (min-width: 1200px) and (max-width: 1299px) {
+  .ant-progress-circle {
+    width: 180px !important;
+    height: 180px !important;
+  }
+}
+
+@media (min-width: 1300px) and (max-width: 1365px) {
+  .ant-progress-circle {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
+
+/* BROAD DESKTOP OVERRIDE - CATCH ALL */
+@media (min-width: 1200px) and (max-width: 1679px) {
+  .ant-progress-circle {
+    width: 500px !important;
+    height: 500px !important;
+  }
+  
+  .blindsPanelContainer {
+    margin-top: 2.5% !important;
   }
 }
