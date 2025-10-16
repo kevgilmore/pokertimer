@@ -958,9 +958,6 @@ const App = () => {
                                 Control Your Poker Timer from Anywhere!
                             </h2>
 
-                            <p style={{ fontSize: '20px', lineHeight: '1.6', color: '#fff', fontWeight: '500' }}>
-                                🎯 <strong>Perfect for Tournament Directors</strong>
-                            </p>
                         </div>
 
                         {/* Main Content - Single Column */}
