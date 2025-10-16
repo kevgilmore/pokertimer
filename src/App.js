@@ -297,10 +297,14 @@ const App = () => {
                                 <div className="timerContentOverlay">
                                     <span className="mainCountdownText">{formatTime(timeLeft)}</span>
                                     <div className="timerButtons">
-                                        <Button className="timerButton" onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />
-                                        <Button className="timerButton timerButtonMain" onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />
-                                        <Button className="timerButton" onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />
-                                        <Button className="timerButton timerButtonReset" onClick={() => resetTimer()} type="primary" shape="circle" icon={<HistoryOutlined />} />
+                                        <div className="timerButtonsRow">
+                                            <Button className="timerButton" onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />
+                                            <Button className="timerButton timerButtonMain" onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />
+                                            <Button className="timerButton" onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />
+                                        </div>
+                                        <div className="timerButtonsRow">
+                                            <Button className="timerButton timerButtonReset" onClick={() => resetTimer()} type="primary" shape="circle" icon={<HistoryOutlined />} />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

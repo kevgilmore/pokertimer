@@ -103,6 +103,7 @@ body > #root > div {
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  padding-top: 55px;
 }
 
 .mainCountdownText {
@@ -110,17 +111,29 @@ body > #root > div {
   font-weight: bold;
   color: white;
   line-height: 1;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   pointer-events: none;
 }
 
 .timerButtons {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  pointer-events: auto;
+  margin-top: 10px;
+}
+
+.timerButtonsRow {
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 15px;
-  flex-wrap: wrap;
-  pointer-events: auto;
+}
+
+.timerButtonsRow:last-child {
+  margin-top: -10px;
 }
 
 .timerButton {
@@ -614,6 +627,10 @@ body > #root > div {
     gap: 8px !important;
   }
   
+  .timerButtonsRow:last-child {
+    margin-top: 5px !important;
+  }
+  
   .prizesCard {
     width: 280px !important;
     margin-bottom: 10px;
@@ -708,6 +725,20 @@ body > #root > div {
 }
 
 
+/* iPad Air 1180x820 */
+@media (min-width: 1180px) and (max-width: 1180px) and (min-height: 820px) and (max-height: 820px) {
+  .timerButtonsRow:last-child {
+    margin-top: 15px !important;
+  }
+}
+
+/* iPad Pro 11-inch M1 (2388x1668) */
+@media (min-width: 2388px) and (max-width: 2388px) and (min-height: 1668px) and (max-height: 1668px) {
+  .blindsPanelContainer {
+    margin-top: -20px !important;
+  }
+}
+
 /* iPad Air landscape (768px-1024px) */
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
   .prizesColumn {
@@ -731,6 +762,10 @@ body > #root > div {
 
   .timerButtons {
     gap: 12px;
+  }
+  
+  .timerButtonsRow:last-child {
+    margin-top: 15px !important;
   }
   
   .prizesCard {
