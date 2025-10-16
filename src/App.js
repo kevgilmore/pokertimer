@@ -1,7 +1,7 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex, Modal, Form, Input, message} from 'antd';
 import {useEffect, useRef, useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled, HistoryOutlined} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled, HistoryOutlined, ReloadOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
@@ -51,6 +51,7 @@ const App = () => {
     }
 
     const handleSubmit = (values) => {
+        const currentTime = new Date().toISOString();
         if (window.gtag) {
             window.gtag('event', 'submit_bug', {
                 event_category: 'User Interaction',
@@ -86,6 +87,8 @@ const App = () => {
     const [timeLeft, setTimeLeft] = useState(game.blindStructure[0].duration * 60);
     const [timePassed, setTimePassed] = useState(0);
     const [isPaused, setIsPaused] = useState(true);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
 
     let intervalRef = useRef();
 
@@ -96,6 +99,16 @@ const App = () => {
         }
         return () => clearInterval(intervalRef.current);
     });
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+            setIsPortrait(window.innerHeight > window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const startGame = () => {
         let currentTime = new Date().toISOString();
@@ -189,8 +202,23 @@ const App = () => {
         setTimeLeft(game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed)
         setOpen(false)
     };
+
+
+    const PortraitView = () => (
+        <div className="portrait-view">
+            <div className="portrait-content">
+                <ReloadOutlined className="flip-icon" />
+                <h2 className="portrait-title">Please rotate your device</h2>
+                <p className="portrait-subtitle">For the best experience, please use landscape mode</p>
+                {isMobile && (
+                    <p className="portrait-mobile-warning">Phone screen size not supported. Please use iPad Mini or bigger.</p>
+                )}
+            </div>
+        </div>
+    );
+    
     return (
-            <ConfigProvider
+        <ConfigProvider
                 theme={{
                 algorithm: theme.darkAlgorithm,
                     token: {
@@ -203,7 +231,7 @@ const App = () => {
                 <Flex justify='space-between' >
                     <a href="/"> <img className="logo" src={logo} alt="logo"></img></a>
                     <h1 className='gameTitle'>{game.title}</h1>
-                    <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
+                    {!(isMobile || isPortrait) && <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>}
                 </Flex>
                 <h3 className='gameSubtitle'>{game.subtitle}</h3>
             </Header>
@@ -211,93 +239,122 @@ const App = () => {
             <Drawer className ="settingsBg" title="Settings" placement="right" onClose={onClose} open={open} width={600}>
                     <Tabs centered="true" type="card" size="large" items={[getTab1(), getTab2(), getTab3()]}/>
                 </Drawer>
-                {/*Main row*/}
-                <Row>
+                {(isMobile || isPortrait) ? (
+                    <PortraitView />
+                ) : (
+                    <>
+                        {/*Main row*/}
+                        <Row>
                     {/*Timer column*/}
-                    <Col span={14}>
+                    <Col xs={24} sm={24} md={16} lg={14} xl={14}>
                         <div className="timerBox">
-                            <Progress type="circle"
-                                format={() =>
-                                <div className="timerControls">
-                                    <span className="mainCountdownText">{formatTime(timeLeft)}</span>
-                                    <br></br>
-                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />}
-                                    {<Button style={{width: 75, height:75, margin:10}} onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />}
-                                    {<Button style={{width: 50, height:50, margin:10}} onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />}
-                                    {<Button className="resetButton" shape="circle" onClick={() => resetTimer()} icon={<HistoryOutlined />} type='primary'></Button>}
-                                </div>}
+                            <div className="timerContainer">
+                                <Progress type="circle"
+                                    format={() => null}
                                     status="normal"
                                     percent={calculatePercentage()}
                                     size={600}
                                     strokeWidth={2}
                                     strokeColor={"#666CFF"}
-                            />
+                                />
+                                <div className="timerContentOverlay">
+                                    <span className="mainCountdownText">{formatTime(timeLeft)}</span>
+                                    <div className="timerButtons">
+                                        <Button className="timerButton" onClick={() => togglePrev()} type="primary" shape="circle" icon={<LeftOutlined />} size={"large"} />
+                                        <Button className="timerButton timerButtonMain" onClick={() => togglePause()} type="primary" shape="circle" icon={pausePlayIcon} size={"large"} />
+                                        <Button className="timerButton" onClick={() => toggleNext()} type="primary" shape="circle" icon={<RightOutlined />} size={"large"} />
+                                        <Button className="timerButton timerButtonReset" onClick={() => resetTimer()} type="primary" shape="circle" icon={<HistoryOutlined />} />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </Col>
 
                     {/*Prizes column*/}
-                    <Col className="prizesColumn" span={10}>
-                        <Flex vertical justify="center">
-                            <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
-                            <h5 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h5> 
-                        </Flex>
-                        <Card bordered={false} className="prizesCard firstPrizeCard">
-                            <Flex justify="center" align="center">
-                                <h5 className="prizeLabel">1st</h5>
-                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[0]}</h1>
-                            </Flex>
-                        </Card>
-                        <Card bordered={false} className="prizesCard secondPrizeCard">
-                            <Flex justify="center" align="center">
-                                <h5 className="prizeLabel">2nd</h5>
-                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[1]}</h1>
-                            </Flex>
-                        </Card>
-                        <Card bordered={false} className="prizesCard thirdPrizeCard">
-                            <Flex justify="center" align="center">
-                                <h5 className="prizeLabel">3rd</h5>
-                                <h1 className="prizeText">{game.currencySymbol}{game.prizes[2]}</h1>
-                            </Flex>
-                        </Card>
+                    <Col className="prizesColumn" xs={0} sm={0} md={8} lg={10} xl={10} xxl={10}>
+                        <div className="prizesColumnContent">
+                            <div className="timerSection">
+                                <p className="timeLapsedLabel">TOURNAMENT RUNNING TIME</p>
+                                <h2 className="totalTimeLapsed">{formatTime(totalTournamentTime)}</h2> 
+                            </div>
+                            <div className="firstPrizeContainer">
+                                <div className="winnerLabel">WINNER</div>
+                                <Card bordered={false} className="prizesCard firstPrizeCard">
+                                    <Flex justify="center" align="center">
+                                        <h5 className="prizeLabel">1st</h5>
+                                        <h1 className="prizeText">{game.currencySymbol}{game.prizes[0]}</h1>
+                                    </Flex>
+                                </Card>
+                            </div>
+                            <Card bordered={false} className="prizesCard secondPrizeCard">
+                                <Flex justify="center" align="center">
+                                    <h5 className="prizeLabel">2nd</h5>
+                                    <h1 className="prizeText">{game.currencySymbol}{game.prizes[1]}</h1>
+                                </Flex>
+                            </Card>
+                            <Card bordered={false} className="prizesCard thirdPrizeCard">
+                                <Flex justify="center" align="center">
+                                    <h5 className="prizeLabel">3rd</h5>
+                                    <h1 className="prizeText">{game.currencySymbol}{game.prizes[2]}</h1>
+                                </Flex>
+                            </Card>
+                        </div>
                     </Col>
                 </Row>
 
                 {/* Blinds Panel */}
-                <Row>
+                <div className="blindsPanelContainer">
                     <Card bordered={false} className="blindsCard">
-                        <Row>
-                            <Col className="blindsList" span={2}>
-                                {game.blindStructure.slice(game.currentBlindLevel < 3 ?     0 : game.currentBlindLevel - 2, 
-                                                           game.currentBlindLevel < 3 ?     4 : game.currentBlindLevel + 2
+                        <div className="blindsPanelContent">
+                            {/* Left Section - Blinds List */}
+                            <div className="blindsListSection">
+                                {game.blindStructure.slice(game.currentBlindLevel < 3 ? 0 : game.currentBlindLevel - 2, 
+                                                           game.currentBlindLevel < 3 ? 4 : game.currentBlindLevel + 2
                                     ).map((blind, index) => {
-                                    return <h4 key={index} className={parseInt(blind.key)  === (game.currentBlindLevel) ? 'blind-item-selected' : 'blind-item'}>{blind.small}/{blind.big}</h4>
+                                    return <div key={index} className={parseInt(blind.key) === (game.currentBlindLevel) ? 'blind-item-selected' : 'blind-item'}>
+                                        {blind.small}/{blind.big}
+                                    </div>
                                 })}
-                                {game.currentBlindLevel > game.blindStructure.length - 2? <h4>END</h4> : null}
-                            </Col>
-                            <div className="verticalLine"></div>
-                            <Col className="flexBoxCol" span={8}>
-                                <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
-                            </Col>
-                            <Col span={8}>
-                                <h1 className="activeBlindGreenText">
-                                    {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
-                                </h1>
-                            </Col>
-                            <Col span={5}>
-                                <Flex style={{paddingTop: '20px'}} justify="center" align="center">
-                                    <h2 style={{paddingRight: 15}}>BUY-INS</h2>
-                                    <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers-1))} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
-                                    <h2 className="buyinText">{game.numOfPlayers}</h2>
-                                    <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers+1))} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
-                                </Flex>
-                            </Col>
-                        </Row>
-                    </Card>
-                </Row>
+                                {game.currentBlindLevel > game.blindStructure.length - 2 ? <div className="blind-item">END</div> : null}
+                            </div>
 
-                <>
-                    {contextHolder}
-                </>
+                            {/* Center Section - Current Level and Blinds */}
+                            <div className="blindsCenterSection">
+                                <div className="levelAndBlindsRow">
+                                    <h1 className="activeBlindLeveltext">LEVEL {game.currentBlindLevel}</h1>
+                                    <div className="blindsValueContainer">
+                                        <div className="blindsLabel" style={{textAlign: 'left', paddingLeft: '10px'}}>BLINDS</div>
+                                        <h1 className="activeBlindGreenText">
+                                            {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
+                                        </h1>
+                                    </div>
+                                    <div className="blindsValueContainer anteContainer">
+                                        <div className="blindsLabel" style={{textAlign: 'left', paddingLeft: '10px'}}>ANTE</div>
+                                        <h1 className="activeBlindGreenText">0</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Section - Player Controls */}
+                            <div className="blindsPlayerSection">
+                                <div className="playerControlsContainer">
+                                    <div className="playerLabel">Buy-ins:</div>
+                                    <div className="playerControls">
+                                        <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers-1))} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
+                                        <span className="playerCount">{game.numOfPlayers}</span>
+                                        <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers+1))} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+
+                        <>
+                            {contextHolder}
+                        </>
+                    </>
+                )}
 
                 <Modal
                     open={isModalOpen}
@@ -346,4 +403,5 @@ const App = () => {
         </ConfigProvider>
     );
 };
+
 export default App;
