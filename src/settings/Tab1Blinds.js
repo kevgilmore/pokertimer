@@ -185,11 +185,55 @@ const Tab1Component = () => {
         },
     ];
     const handleAdd = () => {
+        const lastRow = dataSource[dataSource.length - 1];
+        let newSmall, newBig;
+        
+        // Standard poker blind progression patterns
+        const getNextBlindLevel = (currentValue) => {
+            if (currentValue < 100) {
+                return currentValue * 2; // Early levels: double
+            } else if (currentValue < 500) {
+                return currentValue + 200; // 100-400 range: add 200
+            } else if (currentValue < 1000) {
+                return currentValue + 500; // 500-900 range: add 500
+            } else if (currentValue < 2000) {
+                return currentValue + 1000; // 1000-1900 range: add 1000
+            } else if (currentValue < 5000) {
+                return currentValue + 1500; // 2000-4500 range: add 1500
+            } else if (currentValue < 10000) {
+                return currentValue + 2000; // 5000-9000 range: add 2000
+            } else if (currentValue < 20000) {
+                return currentValue + 5000; // 10000-19000 range: add 5000
+            } else if (currentValue < 50000) {
+                return currentValue + 10000; // 20000-49000 range: add 10000
+            } else {
+                return currentValue * 1.5; // High levels: 1.5x multiplier
+            }
+        };
+        
+        newSmall = getNextBlindLevel(lastRow.small);
+        newBig = newSmall * 2; // Big blind is always double the small blind
+        
+        // Round to clean poker blind increments
+        const roundToCleanBlinds = (value) => {
+            if (value < 100) {
+                return Math.round(value / 25) * 25; // Round to nearest 25
+            } else if (value < 1000) {
+                return Math.round(value / 50) * 50; // Round to nearest 50
+            } else if (value < 10000) {
+                return Math.round(value / 100) * 100; // Round to nearest 100
+            } else if (value < 100000) {
+                return Math.round(value / 500) * 500; // Round to nearest 500
+            } else {
+                return Math.round(value / 1000) * 1000; // Round to nearest 1000
+            }
+        };
+        
         const newData = {
             key: (count+1).toString(),
-            small: dataSource[0].small*2*count,
-            big: dataSource[0].big*2*count,
-            duration: dataSource[0].duration,
+            small: roundToCleanBlinds(newSmall),
+            big: roundToCleanBlinds(newBig),
+            duration: lastRow.duration,
         };
         setDataSource([...dataSource, newData]);
         setCount(count + 1);
@@ -199,7 +243,10 @@ const Tab1Component = () => {
     const handleDelete = (key) => {
         const newData = dataSource.filter((item) => item.key !== key);
         setDataSource(newData);
-        dispatch(deleteBlindLevel(key))
+        
+        // Find the index of the item to delete (1-based for Redux)
+        const indexToDelete = dataSource.findIndex((item) => item.key === key) + 1;
+        dispatch(deleteBlindLevel(indexToDelete));
     };
 
     const components = {

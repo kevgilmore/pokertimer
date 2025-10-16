@@ -1308,13 +1308,22 @@ body > #root > div {
 
 .tableHeaderLabels {
   display: flex;
+  padding-left: 70px;
 }
 
 .tableHeaderItem {
-  margin-left: 70px;
-  flex: 1;
   font-size: 12px;
   font-weight: bold;
+  margin-right: 100px;
+}
+
+.tableHeaderItem:nth-child(2) {
+  margin-right: 80px; /* BIG - move left a little bit */
+}
+
+.tableHeaderItem:nth-child(3) {
+  margin-right: 40px; /* MINS - move left */
+  margin-left: 40px; /* MINS - move right slightly */
 }
 
 .ant-tabs-nav {
