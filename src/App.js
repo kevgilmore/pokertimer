@@ -1,7 +1,7 @@
 import './App.css'
 import {theme, Button, Card, Col, ConfigProvider, Drawer, Layout, Progress, Row, Tabs, Flex, Modal, Form, Input, message} from 'antd';
 import {useEffect, useRef, useState} from 'react';
-import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled, HistoryOutlined, ReloadOutlined} from '@ant-design/icons';
+import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingOutlined, BugOutlined, MinusOutlined, PlusOutlined, HeartFilled, HistoryOutlined, ReloadOutlined, MobileOutlined} from '@ant-design/icons';
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
@@ -56,9 +56,14 @@ const App = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showCustomModal, setShowCustomModal] = useState(false);
+    const [showRemoteModal, setShowRemoteModal] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true)
+    }
+
+    const showRemoteModalHandler = () => {
+        setShowRemoteModal(true)
     }
 
     const handleClassicSelection = () => {
@@ -265,11 +270,22 @@ const App = () => {
             >
         <Layout className="mainBg">
             <Header className="navbarBg">
-                <Flex justify='space-between' >
-                    <a href="/"> <img className="logo" src={logo} alt="logo"></img></a>
-                    <h1 className='gameTitle'>{game.title}</h1>
-                    {!(isMobile || isPortrait) && <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>}
-                </Flex>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'center', width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <a href="/"> <img className="logo" src={logo} alt="logo"></img></a>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <h1 className='gameTitle'>{game.title}</h1>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        {!(isMobile || isPortrait) && (
+                            <>
+                                <Button className="remoteBtn" type="primary" onClick={showRemoteModalHandler} icon={<MobileOutlined />}>Remote</Button>
+                                <Button className="settingsBtn" type="primary" onClick={showDrawer} icon={<SettingOutlined />}></Button>
+                            </>
+                        )}
+                    </div>
+                </div>
                 <h3 className='gameSubtitle'>{game.subtitle}</h3>
             </Header>
             <Content>
@@ -853,6 +869,204 @@ const App = () => {
                             >
                                 🚀 Start from Scratch
                             </Button>
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Remote Control Marketing Modal */}
+                <Modal
+                    open={showRemoteModal}
+                    title=""
+                    footer={null}
+                    closable={true}
+                    onCancel={() => setShowRemoteModal(false)}
+                    width={window.innerWidth < 768 ? '95%' : 1200}
+                    centered
+                    className="custom-modal"
+                    styles={{
+                        mask: {
+                            backdropFilter: 'blur(12px)',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    }}
+                >
+                    <div style={{
+                        background: 'linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)',
+                        color: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        border: '2px solid #333',
+                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.9)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}>
+                        {/* Special Decorative elements */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-50px',
+                            right: '-50px',
+                            width: '120px',
+                            height: '120px',
+                            background: 'radial-gradient(circle, rgba(102, 108, 255, 0.3) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            animation: 'pulse 3s ease-in-out infinite'
+                        }}></div>
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '-30px',
+                            left: '-30px',
+                            width: '100px',
+                            height: '100px',
+                            background: 'radial-gradient(circle, rgba(188, 255, 102, 0.2) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            animation: 'pulse 4s ease-in-out infinite reverse'
+                        }}></div>
+                        <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '200px',
+                            height: '200px',
+                            background: 'radial-gradient(circle, rgba(255, 193, 7, 0.1) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            animation: 'pulse 5s ease-in-out infinite'
+                        }}></div>
+
+                        {/* Header Section - Centered */}
+                        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                            <div style={{
+                                background: 'linear-gradient(45deg, #666CFF, #BCFF66)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                                fontSize: '48px',
+                                fontWeight: 'bold',
+                                marginBottom: '20px',
+                                textShadow: '0 0 30px rgba(102, 108, 255, 0.5)'
+                            }}>
+                                📱 Remote Control
+                            </div>
+                            
+                            <h2 style={{
+                                fontSize: '32px',
+                                fontWeight: 'bold',
+                                marginBottom: '15px',
+                                color: '#BCFF66',
+                                textShadow: '0 0 20px rgba(188, 255, 102, 0.3)'
+                            }}>
+                                Control Your Poker Timer from Anywhere!
+                            </h2>
+
+                            <p style={{ fontSize: '20px', lineHeight: '1.6', color: '#fff', fontWeight: '500' }}>
+                                🎯 <strong>Perfect for Tournament Directors</strong>
+                            </p>
+                        </div>
+
+                        {/* Main Content - Single Column */}
+                        <div style={{ zIndex: 2 }}>
+                            <div style={{ 
+                                background: 'rgba(102, 108, 255, 0.1)', 
+                                padding: '20px', 
+                                borderRadius: '12px', 
+                                border: '1px solid rgba(102, 108, 255, 0.3)',
+                                marginBottom: '20px'
+                            }}>
+                                <div style={{ 
+                                    display: 'flex', 
+                                    gap: '30px',
+                                    alignItems: 'flex-start',
+                                    flexDirection: window.innerWidth < 768 ? 'column' : 'row'
+                                }}>
+                                    {/* Left side - Key Features */}
+                                    <div style={{ flex: 1 }}>
+                                        <h3 style={{ color: '#666CFF', fontSize: '24px', marginBottom: '20px', textAlign: 'left', textShadow: '0 0 15px rgba(102, 108, 255, 0.3)' }}>
+                                            ✨ Key Features
+                                        </h3>
+                                        <ul style={{ fontSize: '18px', lineHeight: '2', paddingLeft: '20px' }}>
+                                            <li>📱 <strong>Mobile Control</strong> - Use your phone as a remote</li>
+                                            <li>🔐 <strong>Secure Code System</strong> - Like Netflix login</li>
+                                            <li>⏱️ <strong>Full Timer Control</strong> - Start, pause, skip levels</li>
+                                            <li>🌐 <strong>Works Anywhere</strong> - No WiFi restrictions</li>
+                                        </ul>
+                                    </div>
+
+                                    {/* Right side - Image */}
+                                    <div style={{ 
+                                        flex: 1, 
+                                        display: 'flex', 
+                                        justifyContent: 'center', 
+                                        alignItems: 'center',
+                                        minHeight: '200px'
+                                    }}>
+                                        <img 
+                                            src="/iphone_mockup.png" 
+                                            alt="Remote Control Feature" 
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '300px',
+                                                height: 'auto'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ 
+                                background: 'rgba(188, 255, 102, 0.1)', 
+                                padding: '20px', 
+                                borderRadius: '12px', 
+                                border: '1px solid rgba(188, 255, 102, 0.3)',
+                                marginBottom: '30px'
+                            }}>
+                                <h3 style={{ color: '#BCFF66', fontSize: '24px', marginBottom: '15px', textAlign: 'left', textShadow: '0 0 15px rgba(188, 255, 102, 0.3)' }}>
+                                    🚀 How It Works
+                                </h3>
+                                <ol style={{ fontSize: '18px', lineHeight: '2', paddingLeft: '20px' }}>
+                                    <li>Get a <strong>connection code</strong> from your timer</li>
+                                    <li>Open <strong>pokertimer.gg</strong> on your phone</li>
+                                    <li>Enter the code to connect</li>
+                                    <li>Control your timer remotely!</li>
+                                </ol>
+                            </div>
+
+                            {/* Email Signup - No Card */}
+                            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                                <h3 style={{ color: '#FFC107', fontSize: '24px', marginBottom: '20px', textShadow: '0 0 15px rgba(255, 193, 7, 0.3)' }}>
+                                    🚧 Coming Soon
+                                </h3>
+                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Input 
+                                        placeholder="Enter your email"
+                                        style={{
+                                            width: '300px',
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            border: '2px solid rgba(255, 255, 255, 0.3)',
+                                            color: 'white',
+                                            fontSize: '16px',
+                                            padding: '12px 16px',
+                                            borderRadius: '8px'
+                                        }}
+                                    />
+                                    <Button 
+                                        type="primary" 
+                                        size="large"
+                                        style={{
+                                            background: 'linear-gradient(45deg, #FFC107, #FF8C00)',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '18px',
+                                            fontWeight: 'bold',
+                                            padding: '12px 30px',
+                                            height: 'auto',
+                                            boxShadow: '0 6px 20px rgba(255, 193, 7, 0.4)',
+                                            textShadow: '0 0 10px rgba(0, 0, 0, 0.3)'
+                                        }}
+                                    >
+                                        Notify Me
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </Modal>
