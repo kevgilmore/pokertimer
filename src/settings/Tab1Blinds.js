@@ -155,6 +155,12 @@ const Tab1Component = () => {
     const [dataSource, setDataSource] = useState(game.blindStructure);
     const [count, setCount] = useState(game.blindStructure.length);
     const [selectedInterval, setSelectedInterval] = useState(20);
+
+    // Sync local state with Redux state changes
+    useEffect(() => {
+        setDataSource(game.blindStructure);
+        setCount(game.blindStructure.length);
+    }, [game.blindStructure]);
     const defaultColumns = [
         {
             key: 'sort',

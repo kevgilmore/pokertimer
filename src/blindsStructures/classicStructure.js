@@ -1,4 +1,4 @@
-const twentyFiveFifty = [
+const classicStructure = [
     {
         key: '1',
         small: 25,
@@ -91,4 +91,4 @@ const twentyFiveFifty = [
     }
 ]
 
-export default twentyFiveFifty;
+export default classicStructure;

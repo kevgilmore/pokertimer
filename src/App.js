@@ -5,7 +5,9 @@ import {CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined, SettingO
 import 'react-circular-progressbar/dist/styles.css';
 import {getTab1, getTab2, getTab3} from "./settings/TabsManager";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBlindLevel, updateNumOfPlayers, updateStartTime} from "./redux/game";
+import {changeBlindLevel, updateNumOfPlayers, updateStartTime, updateBlindStructure} from "./redux/game";
+import classicStructure from "./blindsStructures/classicStructure";
+import modernStructure from "./blindsStructures/modernStructure";
 import formatTime from './TimeFormatter';
 import { Footer } from 'antd/es/layout/layout';
 import logo from './logo.png'
@@ -27,6 +29,14 @@ const App = () => {
         }
     }, []);
 
+    useEffect(() => {
+        // Check if user has already made a blind structure selection
+        const hasSelectedBlindStructure = localStorage.getItem('blindStructureSelected') === 'true';
+        if (!hasSelectedBlindStructure) {
+            setShowCustomModal(true);
+        }
+    }, []);
+
     const successMsg = () => {
         messageApi
           .open({
@@ -45,9 +55,36 @@ const App = () => {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showCustomModal, setShowCustomModal] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true)
+    }
+
+    const handleClassicSelection = () => {
+        dispatch(updateBlindStructure(classicStructure));
+        localStorage.setItem('blindStructureSelected', 'true');
+        setShowCustomModal(false);
+    }
+
+    const handleModernSelection = () => {
+        dispatch(updateBlindStructure(modernStructure));
+        localStorage.setItem('blindStructureSelected', 'true');
+        setShowCustomModal(false);
+    }
+
+    const handleFromScratchSelection = () => {
+        const emptyStructure = [
+            {
+                key: '1',
+                small: 0,
+                big: 0,
+                duration: 20,
+            }
+        ];
+        dispatch(updateBlindStructure(emptyStructure));
+        localStorage.setItem('blindStructureSelected', 'true');
+        setShowCustomModal(false);
     }
 
     const handleSubmit = (values) => {
@@ -384,6 +421,436 @@ const App = () => {
                             <TextArea rows={4} />
                         </Form.Item>
                     </Form>
+                </Modal>
+
+                {/* Blind Structure Help Modal */}
+                <Modal
+                    open={showCustomModal}
+                    title=""
+                    footer={null}
+                    closable={false}
+                    maskClosable={false}
+                    onCancel={() => {}} // Prevent closing
+                    width={900}
+                    centered
+                    className="custom-modal"
+                    styles={{
+                        mask: {
+                            backdropFilter: 'blur(12px)',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    }}
+                >
+                    <div style={{
+                        background: 'linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)',
+                        color: 'white',
+                        padding: '40px',
+                        borderRadius: '16px',
+                        border: '2px solid #333',
+                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.9)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}>
+                        {/* Decorative elements */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-50px',
+                            right: '-50px',
+                            width: '100px',
+                            height: '100px',
+                            background: 'radial-gradient(circle, rgba(24, 144, 255, 0.1) 0%, transparent 70%)',
+                            borderRadius: '50%'
+                        }}></div>
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '-30px',
+                            left: '-30px',
+                            width: '60px',
+                            height: '60px',
+                            background: 'radial-gradient(circle, rgba(82, 196, 26, 0.1) 0%, transparent 70%)',
+                            borderRadius: '50%'
+                        }}></div>
+
+                        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                            <h1 style={{ 
+                                color: '#fff', 
+                                fontSize: '36px', 
+                                fontWeight: '800',
+                                marginBottom: '15px',
+                                textShadow: '0 3px 6px rgba(0, 0, 0, 0.6)',
+                                background: 'linear-gradient(45deg, #1890ff, #52c41a)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                            }}>
+                                🃏 Select Your Poker Tournament Format
+                            </h1>
+                            <p style={{ 
+                                color: '#ccc', 
+                                fontSize: '20px', 
+                                marginBottom: '8px',
+                                fontWeight: '400',
+                                letterSpacing: '0.3px'
+                            }}>
+                                Choose the chip structure that matches your tournament style
+                            </p>
+                            <p style={{ 
+                                color: '#999', 
+                                fontSize: '16px', 
+                                marginBottom: '0',
+                                fontWeight: '300',
+                                fontStyle: 'italic'
+                            }}>
+                                Each format is optimized for different tournament lengths and player preferences
+                            </p>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', marginBottom: '40px' }}>
+                            {/* Classic Tournament Setup */}
+                            <div style={{ flex: 1, position: 'relative' }}>
+                                <div
+                                    onClick={handleClassicSelection}
+                                    style={{
+                                        width: '100%',
+                                        height: '180px',
+                                        background: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
+                                        border: '3px solid rgba(82, 196, 26, 0.4)',
+                                        borderRadius: '20px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '18px',
+                                        fontWeight: '600',
+                                        boxShadow: '0 8px 24px rgba(82, 196, 26, 0.3)',
+                                        transition: 'all 0.3s ease',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.transform = 'translateY(-4px)';
+                                        e.target.style.boxShadow = '0 12px 32px rgba(82, 196, 26, 0.4)';
+                                        e.target.style.borderColor = 'rgba(82, 196, 26, 0.6)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = '0 8px 24px rgba(82, 196, 26, 0.3)';
+                                        e.target.style.borderColor = 'rgba(82, 196, 26, 0.4)';
+                                    }}
+                                >
+                                    {/* Decorative poker chips background */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '10px',
+                                        right: '10px',
+                                        fontSize: '24px',
+                                        opacity: 0.3
+                                    }}>🟢</div>
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '10px',
+                                        left: '10px',
+                                        fontSize: '20px',
+                                        opacity: 0.3
+                                    }}>🟩</div>
+                                    
+                                    <div style={{ fontSize: '48px', marginBottom: '12px' }}>♠️</div>
+                                    <div style={{ fontSize: '22px', marginBottom: '8px', fontWeight: '700' }}>Classic Tournament</div>
+                                    <div style={{ fontSize: '15px', opacity: 0.9, fontWeight: '400' }}>
+                                        Traditional Multi-Level Structure
+                                    </div>
+                                </div>
+                                
+                                <div style={{ 
+                                    marginTop: '25px',
+                                    padding: '0'
+                                }}>
+                                    <div style={{ 
+                                        fontSize: '16px', 
+                                        color: '#52c41a', 
+                                        fontWeight: '700', 
+                                        marginBottom: '15px',
+                                        textAlign: 'center',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}>
+                                        Chip Values
+                                    </div>
+                                    
+                                    <div style={{ 
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        fontSize: '14px',
+                                        color: '#ccc'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#fff', 
+                                                borderRadius: '50%', 
+                                                border: '1px solid #ddd',
+                                                position: 'relative'
+                                            }}>
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: '50%',
+                                                    left: '50%',
+                                                    transform: 'translate(-50%, -50%)',
+                                                    width: '4px',
+                                                    height: '4px',
+                                                    backgroundColor: '#333',
+                                                    borderRadius: '50%'
+                                                }}></div>
+                                            </div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>25</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#ff4d4f', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #ff7875'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>100</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#1890ff', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #40a9ff'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>500</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#52c41a', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #73d13d'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>1,000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#000', 
+                                                borderRadius: '50%', 
+                                                border: '1px solid #333'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>5,000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#722ed1', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #9254de'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>10,000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Modern Tournament Setup */}
+                            <div style={{ flex: 1, position: 'relative' }}>
+                                <div
+                                    onClick={handleModernSelection}
+                                    style={{
+                                        width: '100%',
+                                        height: '180px',
+                                        background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
+                                        border: '3px solid rgba(24, 144, 255, 0.4)',
+                                        borderRadius: '20px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '18px',
+                                        fontWeight: '600',
+                                        boxShadow: '0 8px 24px rgba(24, 144, 255, 0.3)',
+                                        transition: 'all 0.3s ease',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.transform = 'translateY(-4px)';
+                                        e.target.style.boxShadow = '0 12px 32px rgba(24, 144, 255, 0.4)';
+                                        e.target.style.borderColor = 'rgba(24, 144, 255, 0.6)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = '0 8px 24px rgba(24, 144, 255, 0.3)';
+                                        e.target.style.borderColor = 'rgba(24, 144, 255, 0.4)';
+                                    }}
+                                >
+                                    {/* Decorative elements background */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '10px',
+                                        right: '10px',
+                                        fontSize: '24px',
+                                        opacity: 0.3
+                                    }}>🔵</div>
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '10px',
+                                        left: '10px',
+                                        fontSize: '20px',
+                                        opacity: 0.3
+                                    }}>🟦</div>
+                                    
+                                    <div style={{ fontSize: '48px', marginBottom: '12px' }}>⚡</div>
+                                    <div style={{ fontSize: '22px', marginBottom: '8px', fontWeight: '700' }}>Modern Tournament</div>
+                                    <div style={{ fontSize: '15px', opacity: 0.9, fontWeight: '400' }}>
+                                        Fast-Paced Streamlined Format
+                                    </div>
+                                </div>
+                                
+                                <div style={{ 
+                                    marginTop: '25px',
+                                    padding: '0'
+                                }}>
+                                    <div style={{ 
+                                        fontSize: '16px', 
+                                        color: '#1890ff', 
+                                        fontWeight: '700', 
+                                        marginBottom: '15px',
+                                        textAlign: 'center',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}>
+                                        Chip Values
+                                    </div>
+                                    
+                                    <div style={{ 
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        fontSize: '14px',
+                                        color: '#ccc'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#fff', 
+                                                borderRadius: '50%', 
+                                                border: '1px solid #ddd',
+                                                position: 'relative'
+                                            }}>
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: '50%',
+                                                    left: '50%',
+                                                    transform: 'translate(-50%, -50%)',
+                                                    width: '4px',
+                                                    height: '4px',
+                                                    backgroundColor: '#333',
+                                                    borderRadius: '50%'
+                                                }}></div>
+                                            </div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>100</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#ff4d4f', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #ff7875'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>500</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#1890ff', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #40a9ff'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>1,000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#52c41a', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #73d13d'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>5,000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#000', 
+                                                borderRadius: '50%', 
+                                                border: '1px solid #333'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>10,000</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ 
+                                                width: '16px', 
+                                                height: '16px', 
+                                                backgroundColor: '#faad14', 
+                                                borderRadius: '50%',
+                                                border: '1px solid #ffc53d'
+                                            }}></div>
+                                            <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>25,000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style={{ textAlign: 'center' }}>
+                            <Button 
+                                type="default" 
+                                onClick={handleFromScratchSelection}
+                                size="large"
+                                style={{ 
+                                    background: 'linear-gradient(135deg, #434343 0%, #2A2A2A 100%)',
+                                    border: '2px solid #555',
+                                    color: '#fff',
+                                    borderRadius: '12px',
+                                    padding: '12px 32px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    height: 'auto',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.transform = 'translateY(-2px)';
+                                    e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.4)';
+                                    e.target.style.borderColor = '#777';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.transform = 'translateY(0)';
+                                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                                    e.target.style.borderColor = '#555';
+                                }}
+                            >
+                                🚀 Start from Scratch
+                            </Button>
+                        </div>
+                    </div>
                 </Modal>
 
             </Content>

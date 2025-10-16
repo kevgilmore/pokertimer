@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import twentyFiveFifty from "../blindsStructures/TwentyFiveFifty";
+import classicStructure from "../blindsStructures/classicStructure";
 
 const initialState = localStorage.getItem("game") ? JSON.parse(localStorage.getItem("game")) : {
     title: "",
     subtitle: "",
     startTime: "",
     isSoundEnabled: true,
-    blindStructure: twentyFiveFifty,
+    blindStructure: classicStructure,
     currentBlindLevel: 1,
     currency: "GBP",
     currencySymbol: "£",
