@@ -1030,14 +1030,75 @@ const App = () => {
                                 </ol>
                             </div>
 
-                            {/* Email Signup - No Card */}
+                            {/* Email Signup - Mailchimp Integration */}
                             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                                 <h3 style={{ color: '#FFC107', fontSize: '24px', marginBottom: '20px', textShadow: '0 0 15px rgba(255, 193, 7, 0.3)' }}>
                                     🚧 Coming Soon
                                 </h3>
-                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Input 
+                                <form 
+                                    action="https://pokertimer.us5.list-manage.com/subscribe/post?u=25e23b59560a646ba16615308&amp;id=b913746fd7&amp;f_id=00b7e9e1f0" 
+                                    method="post" 
+                                    id="mc-embedded-subscribe-form" 
+                                    name="mc-embedded-subscribe-form" 
+                                    className="validate" 
+                                    noValidate
+                                    style={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'center' }}
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const form = e.target;
+                                        const email = form.querySelector('#mce-EMAIL').value;
+                                        const button = form.querySelector('#mc-embedded-subscribe');
+                                        const successDiv = document.getElementById('mce-success-response');
+                                        const errorDiv = document.getElementById('mce-error-response');
+                                        
+                                        // Hide previous messages
+                                        successDiv.style.display = 'none';
+                                        errorDiv.style.display = 'none';
+                                        
+                                        // Basic email validation
+                                        if (!email || !email.includes('@')) {
+                                            errorDiv.textContent = 'Please enter a valid email address';
+                                            errorDiv.style.display = 'block';
+                                            return;
+                                        }
+                                        
+                                        // Show loading state
+                                        const originalText = button.textContent;
+                                        button.textContent = 'Subscribing...';
+                                        button.disabled = true;
+                                        
+                                        // Create form data
+                                        const formData = new FormData(form);
+                                        
+                                        // Submit to Mailchimp
+                                        fetch(form.action, {
+                                            method: 'POST',
+                                            body: formData,
+                                            mode: 'no-cors'
+                                        })
+                                        .then(() => {
+                                            // Since we can't read the response due to CORS, we'll assume success
+                                            successDiv.textContent = "Thank you! We'll be in touch soon! 🎉";
+                                            successDiv.style.display = 'block';
+                                            form.querySelector('#mce-EMAIL').value = '';
+                                        })
+                                        .catch(() => {
+                                            errorDiv.textContent = 'Something went wrong. Please try again.';
+                                            errorDiv.style.display = 'block';
+                                        })
+                                        .finally(() => {
+                                            button.textContent = originalText;
+                                            button.disabled = false;
+                                        });
+                                    }}
+                                >
+                                    <input 
+                                        type="email" 
+                                        name="EMAIL" 
+                                        className="required email" 
+                                        id="mce-EMAIL" 
                                         placeholder="Enter your email"
+                                        required
                                         style={{
                                             width: '300px',
                                             background: 'rgba(255, 255, 255, 0.1)',
@@ -1045,12 +1106,14 @@ const App = () => {
                                             color: 'white',
                                             fontSize: '16px',
                                             padding: '12px 16px',
-                                            borderRadius: '8px'
+                                            borderRadius: '8px',
+                                            outline: 'none'
                                         }}
                                     />
-                                    <Button 
-                                        type="primary" 
-                                        size="large"
+                                    <button 
+                                        type="submit" 
+                                        name="subscribe" 
+                                        id="mc-embedded-subscribe" 
                                         style={{
                                             background: 'linear-gradient(45deg, #FFC107, #FF8C00)',
                                             border: 'none',
@@ -1060,11 +1123,32 @@ const App = () => {
                                             padding: '12px 30px',
                                             height: 'auto',
                                             boxShadow: '0 6px 20px rgba(255, 193, 7, 0.4)',
-                                            textShadow: '0 0 10px rgba(0, 0, 0, 0.3)'
+                                            textShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+                                            color: 'white',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            if (!e.target.disabled) {
+                                                e.target.style.transform = 'translateY(-2px)';
+                                                e.target.style.boxShadow = '0 8px 25px rgba(255, 193, 7, 0.6)';
+                                            }
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(255, 193, 7, 0.4)';
                                         }}
                                     >
                                         Notify Me
-                                    </Button>
+                                    </button>
+                                    {/* Real people should not fill this in and expect good things - do not remove this or risk form bot signups */}
+                                    <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                                        <input type="text" name="b_25e23b59560a646ba16615308_b913746fd7" tabIndex="-1" value="" />
+                                    </div>
+                                </form>
+                                <div id="mce-responses" style={{ marginTop: '10px' }}>
+                                    <div id="mce-error-response" style={{ display: 'none', color: '#ff4d4f', fontSize: '14px' }}></div>
+                                    <div id="mce-success-response" style={{ display: 'none', color: '#52c41a', fontSize: '14px' }}></div>
                                 </div>
                             </div>
                         </div>
