@@ -29,13 +29,6 @@ const App = () => {
         }
     }, []);
 
-    useEffect(() => {
-        // Check if user has already made a blind structure selection
-        const hasSelectedBlindStructure = localStorage.getItem('blindStructureSelected') === 'true';
-        if (!hasSelectedBlindStructure) {
-            setShowCustomModal(true);
-        }
-    }, []);
 
     const successMsg = () => {
         messageApi
@@ -55,7 +48,7 @@ const App = () => {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [showCustomModal, setShowCustomModal] = useState(false);
+    const [showIntroModal, setShowIntroModal] = useState(false);
     const [showRemoteModal, setShowRemoteModal] = useState(false);
 
     const showModal = () => {
@@ -69,13 +62,13 @@ const App = () => {
     const handleClassicSelection = () => {
         dispatch(updateBlindStructure(classicStructure));
         localStorage.setItem('blindStructureSelected', 'true');
-        setShowCustomModal(false);
+        setShowIntroModal(false);
     }
 
     const handleModernSelection = () => {
         dispatch(updateBlindStructure(modernStructure));
         localStorage.setItem('blindStructureSelected', 'true');
-        setShowCustomModal(false);
+        setShowIntroModal(false);
     }
 
     const handleFromScratchSelection = () => {
@@ -89,7 +82,7 @@ const App = () => {
         ];
         dispatch(updateBlindStructure(emptyStructure));
         localStorage.setItem('blindStructureSelected', 'true');
-        setShowCustomModal(false);
+        setShowIntroModal(false);
     }
 
     const handleSubmit = (values) => {
@@ -131,6 +124,7 @@ const App = () => {
     const [isPaused, setIsPaused] = useState(true);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
+    const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
     let intervalRef = useRef();
 
@@ -146,11 +140,20 @@ const App = () => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
             setIsPortrait(window.innerHeight > window.innerWidth);
+            setViewportHeight(window.innerHeight);
         };
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        // Check if user has already made a blind structure selection
+        const hasSelectedBlindStructure = localStorage.getItem('blindStructureSelected') === 'true';
+        if (!hasSelectedBlindStructure && !isPortrait) {
+            setShowIntroModal(true);
+        }
+    }, [isPortrait]);
 
     const startGame = () => {
         let currentTime = new Date().toISOString();
@@ -443,96 +446,74 @@ const App = () => {
                     </Form>
                 </Modal>
 
-                {/* Blind Structure Help Modal */}
+                {/* Intro Modal */}
                 <Modal
-                    open={showCustomModal}
+                    open={showIntroModal}
                     title=""
                     footer={null}
                     closable={false}
                     maskClosable={false}
                     onCancel={() => {}} // Prevent closing
-                    width={900}
+                    width={Math.min(1000, window.innerWidth * 0.95)}
                     centered
-                    className="custom-modal"
                     styles={{
                         mask: {
                             backdropFilter: 'blur(12px)',
                             backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        },
+                        body: {
+                            maxHeight: `${Math.min(viewportHeight * 0.95, 700)}px`,
+                            overflowY: 'auto',
+                            padding: '0'
                         }
                     }}
                 >
                     <div style={{
-                        background: 'linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)',
                         color: 'white',
-                        padding: '40px',
-                        borderRadius: '16px',
-                        border: '2px solid #333',
-                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.9)',
+                        padding: viewportHeight < 600 ? '15px' : '25px',
                         position: 'relative',
-                        overflow: 'hidden'
+                        height: '100%'
                     }}>
-                        {/* Decorative elements */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '-50px',
-                            right: '-50px',
-                            width: '100px',
-                            height: '100px',
-                            background: 'radial-gradient(circle, rgba(24, 144, 255, 0.1) 0%, transparent 70%)',
-                            borderRadius: '50%'
-                        }}></div>
-                        <div style={{
-                            position: 'absolute',
-                            bottom: '-30px',
-                            left: '-30px',
-                            width: '60px',
-                            height: '60px',
-                            background: 'radial-gradient(circle, rgba(82, 196, 26, 0.1) 0%, transparent 70%)',
-                            borderRadius: '50%'
-                        }}></div>
 
-                        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: viewportHeight < 600 ? '15px' : '20px' }}>
                             <h1 style={{ 
                                 color: '#fff', 
-                                fontSize: '36px', 
+                                fontSize: viewportHeight < 600 ? '22px' : '30px', 
                                 fontWeight: '800',
-                                marginBottom: '15px',
+                                marginBottom: '8px',
                                 textShadow: '0 3px 6px rgba(0, 0, 0, 0.6)',
                                 background: 'linear-gradient(45deg, #1890ff, #52c41a)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                                 backgroundClip: 'text'
                             }}>
-                                🃏 Select Your Poker Tournament Format
+                                🃏 Welcome to Poker Timer
                             </h1>
                             <p style={{ 
                                 color: '#ccc', 
-                                fontSize: '20px', 
-                                marginBottom: '8px',
+                                fontSize: viewportHeight < 600 ? '14px' : '18px', 
+                                marginBottom: '0',
                                 fontWeight: '400',
                                 letterSpacing: '0.3px'
                             }}>
-                                Choose the chip structure that matches your tournament style
-                            </p>
-                            <p style={{ 
-                                color: '#999', 
-                                fontSize: '16px', 
-                                marginBottom: '0',
-                                fontWeight: '300',
-                                fontStyle: 'italic'
-                            }}>
-                                Each format is optimized for different tournament lengths and player preferences
+                                Choose your preferred tournament format to get started
                             </p>
                         </div>
                         
-                        <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', marginBottom: '40px' }}>
+                        <div style={{ 
+                            display: 'flex', 
+                            gap: viewportHeight < 600 ? '10px' : '20px', 
+                            justifyContent: 'center', 
+                            marginBottom: viewportHeight < 600 ? '15px' : '20px',
+                            flexDirection: viewportHeight < 500 ? 'column' : 'row'
+                        }}>
                             {/* Classic Tournament Setup */}
                             <div style={{ flex: 1, position: 'relative' }}>
                                 <div
                                     onClick={handleClassicSelection}
                                     style={{
                                         width: '100%',
-                                        height: '180px',
+                                        height: viewportHeight < 600 ? '140px' : '180px',
                                         background: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
                                         border: '3px solid rgba(82, 196, 26, 0.4)',
                                         borderRadius: '20px',
@@ -599,14 +580,15 @@ const App = () => {
                                     </div>
                                     
                                     <div style={{ 
-                                        display: 'flex',
-                                        flexDirection: 'column',
+                                        display: 'grid',
+                                        gridTemplateColumns: viewportHeight < 800 ? '1fr 1fr' : '1fr',
                                         alignItems: 'center',
-                                        gap: '8px',
-                                        fontSize: '14px',
-                                        color: '#ccc'
+                                        gap: '4px',
+                                        fontSize: '12px',
+                                        color: '#ccc',
+                                        padding: '0 30px'
                                     }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -628,7 +610,7 @@ const App = () => {
                                             </div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>25</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -638,7 +620,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>100</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -648,7 +630,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>500</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -658,7 +640,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>1,000</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -668,7 +650,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>5,000</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -688,7 +670,7 @@ const App = () => {
                                     onClick={handleModernSelection}
                                     style={{
                                         width: '100%',
-                                        height: '180px',
+                                        height: viewportHeight < 600 ? '140px' : '180px',
                                         background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
                                         border: '3px solid rgba(24, 144, 255, 0.4)',
                                         borderRadius: '20px',
@@ -755,14 +737,15 @@ const App = () => {
                                     </div>
                                     
                                     <div style={{ 
-                                        display: 'flex',
-                                        flexDirection: 'column',
+                                        display: 'grid',
+                                        gridTemplateColumns: viewportHeight < 800 ? '1fr 1fr' : '1fr',
                                         alignItems: 'center',
-                                        gap: '8px',
-                                        fontSize: '14px',
-                                        color: '#ccc'
+                                        gap: '4px',
+                                        fontSize: '12px',
+                                        color: '#ccc',
+                                        padding: '0 30px'
                                     }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -784,7 +767,7 @@ const App = () => {
                                             </div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>100</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -794,7 +777,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>500</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -804,7 +787,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>1,000</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -814,7 +797,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>5,000</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -824,7 +807,7 @@ const App = () => {
                                             }}></div>
                                             <span style={{ fontWeight: '600', fontSize: '16px', color: '#fff', minWidth: '60px', textAlign: 'left' }}>10,000</span>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', maxWidth: '120px', justifyContent: 'center', paddingLeft: '50px' }}>
                                             <div style={{ 
                                                 width: '16px', 
                                                 height: '16px', 
@@ -849,8 +832,8 @@ const App = () => {
                                     border: '2px solid #555',
                                     color: '#fff',
                                     borderRadius: '12px',
-                                    padding: '12px 32px',
-                                    fontSize: '16px',
+                                    padding: viewportHeight < 600 ? '8px 24px' : '12px 32px',
+                                    fontSize: viewportHeight < 600 ? '14px' : '16px',
                                     fontWeight: '600',
                                     height: 'auto',
                                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
