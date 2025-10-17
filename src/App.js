@@ -57,6 +57,20 @@ const App = () => {
 
     const showRemoteModalHandler = () => {
         setShowRemoteModal(true)
+        
+        // Track remote modal open event
+        if (window.gtag) {
+            window.gtag('event', 'remote_modal_open', {
+                event_category: 'User Interaction',
+                event_label: 'Remote Modal Opened',
+                custom_parameters: {
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent,
+                    screen_resolution: `${window.screen.width}x${window.screen.height}`,
+                    viewport_size: `${window.innerWidth}x${window.innerHeight}`
+                }
+            });
+        }
     }
 
     const handleClassicSelection = () => {
@@ -94,10 +108,13 @@ const App = () => {
                 start_time: currentTime,
             });
         }
+        const emailText = values.email ? `\n\nEmail: ${values.email}` : '';
+        const fullText = values.bugDescription + emailText;
+        
         emailjs.send(
             process.env.REACT_APP_EMAILJS_SERVICE_ID,
             process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-            { text: values.bugDescription },
+            { text: fullText },
             process.env.REACT_APP_EMAILJS_PUBLIC_KEY)
         .then(() => {
             setIsModalOpen(false)
@@ -538,8 +555,32 @@ const App = () => {
                                     { required: true, message: 'Please describe the bug before submitting.' }
                                 ]}
                         >
-                            <TextArea rows={4} />
+                            <TextArea rows={4} placeholder="Please describe the bug you encountered..." />
                         </Form.Item>
+                        <Form.Item name="email"
+                                label="Do you want us to email you when it's fixed?"
+                                rules={[
+                                    { type: 'email', message: 'Please enter a valid email address.' }
+                                ]}
+                                style={{ marginBottom: '20px' }}
+                        >
+                            <Input placeholder="your.email@example.com" style={{ width: '100%' }} />
+                        </Form.Item>
+                        
+                        <div style={{ 
+                            background: 'rgba(102, 108, 255, 0.1)', 
+                            padding: '15px', 
+                            borderRadius: '8px', 
+                            border: '1px solid rgba(102, 108, 255, 0.3)'
+                        }}>
+                            <h4 style={{ color: '#666CFF', marginTop: 0, marginBottom: '10px', fontSize: '16px' }}>
+                                🚀 Upcoming Features
+                            </h4>
+                            <ul style={{ margin: 0, paddingLeft: '20px', color: '#ccc' }}>
+                                <li>Ante support</li>
+                                <li>Mobile remote</li>
+                            </ul>
+                        </div>
                     </Form>
                 </Modal>
 
