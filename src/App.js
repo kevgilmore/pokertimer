@@ -125,8 +125,102 @@ const App = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
     const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+    const [gameStartTime, setGameStartTime] = useState(null);
+    const [gameSessionId, setGameSessionId] = useState(null);
 
     let intervalRef = useRef();
+
+    // Google Analytics tracking functions
+    const trackGameStart = (gameType, currency) => {
+        const sessionId = `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        setGameSessionId(sessionId);
+        setGameStartTime(Date.now());
+        
+        if (window.gtag) {
+            window.gtag('event', 'game_start', {
+                event_category: 'Game Session',
+                event_label: 'Game Started',
+                custom_parameters: {
+                    game_type: gameType,
+                    currency: currency,
+                    session_id: sessionId,
+                    blind_structure: game.blindStructure.length,
+                    start_time: new Date().toISOString()
+                }
+            });
+        }
+    };
+
+    const trackGameEnd = (reason = 'user_ended') => {
+        if (!gameStartTime || !gameSessionId) return;
+        
+        const gameLength = Math.floor((Date.now() - gameStartTime) / 1000); // in seconds
+        const gameLengthMinutes = Math.floor(gameLength / 60);
+        const maxBlindLevel = game.currentBlindLevel;
+        const totalBuyins = game.numOfPlayers;
+        
+        if (window.gtag) {
+            window.gtag('event', 'game_end', {
+                event_category: 'Game Session',
+                event_label: 'Game Ended',
+                value: gameLengthMinutes,
+                custom_parameters: {
+                    session_id: gameSessionId,
+                    game_length_seconds: gameLength,
+                    game_length_minutes: gameLengthMinutes,
+                    max_blind_level: maxBlindLevel,
+                    total_buyins: totalBuyins,
+                    end_reason: reason,
+                    end_time: new Date().toISOString()
+                }
+            });
+        }
+        
+        // Reset session tracking
+        setGameSessionId(null);
+        setGameStartTime(null);
+    };
+
+    const trackBuyinChange = (newBuyinCount) => {
+        if (!gameSessionId) return;
+        
+        if (window.gtag) {
+            window.gtag('event', 'buyin_change', {
+                event_category: 'Game Session',
+                event_label: 'Buyins Updated',
+                value: newBuyinCount,
+                custom_parameters: {
+                    session_id: gameSessionId,
+                    new_buyin_count: newBuyinCount,
+                    timestamp: new Date().toISOString()
+                }
+            });
+        }
+    };
+
+    const handleBuyinIncrease = () => {
+        const newCount = game.numOfPlayers + 1;
+        dispatch(updateNumOfPlayers(newCount));
+        trackBuyinChange(newCount);
+    };
+
+    const handleBuyinDecrease = () => {
+        const newCount = game.numOfPlayers - 1;
+        dispatch(updateNumOfPlayers(newCount));
+        trackBuyinChange(newCount);
+    };
+
+    // Track when user leaves the page
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            trackGameEnd('page_unload');
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [gameStartTime, gameSessionId]);
 
     useEffect(() => {
         localStorage.setItem('game', JSON.stringify(game));
@@ -161,13 +255,13 @@ const App = () => {
         dispatch(updateStartTime(currentTime));
         setPausePlayIcon(getIcon());
         intervalRef.current = setInterval(updateTimer, ONE_SECOND);
-        if (window.gtag) {
-            window.gtag('event', 'start_new_game', {
-                event_category: 'User Interaction',
-                event_label: 'Start New Game',
-                start_time: currentTime,
-            });
-        }
+        
+        // Determine game type based on blind structure
+        const gameType = game.blindStructure === classicStructure ? 'classic' : 
+                        game.blindStructure === modernStructure ? 'modern' : 'custom';
+        
+        // Track game start with comprehensive data
+        trackGameStart(gameType, game.currency);
     };
 
     const updateTimer = () => {
@@ -215,6 +309,9 @@ const App = () => {
     }
 
     const resetTimer = () => {
+        // Track game end before resetting
+        trackGameEnd('user_reset');
+        
         dispatch(changeBlindLevel(1))
         setTimeLeft(game.blindStructure[0].duration * 60)
         setTimePassed(0)
@@ -400,9 +497,9 @@ const App = () => {
                                 <div className="playerControlsContainer">
                                     <div className="playerLabel">Buy-ins:</div>
                                     <div className="playerControls">
-                                        <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers-1))} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
+                                        <Button onClick={handleBuyinDecrease} type="primary" shape="circle" icon={<MinusOutlined />} size="large" />
                                         <span className="playerCount">{game.numOfPlayers}</span>
-                                        <Button onClick={() => dispatch(updateNumOfPlayers(game.numOfPlayers+1))} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
+                                        <Button onClick={handleBuyinIncrease} type="primary" shape="circle" icon={<PlusOutlined />} size="large" />
                                     </div>
                                 </div>
                             </div>
