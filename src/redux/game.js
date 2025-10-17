@@ -15,6 +15,7 @@ const initialState = localStorage.getItem("game") ? JSON.parse(localStorage.getI
     numOfPlayers: 6,
     placesPaid: 3,
     prizes: [100, 75, 50],
+    isAnteEnabled: false,
 }
 
 const getCurrencySymbol = (currency) => {
@@ -71,10 +72,33 @@ export const gameSlice = createSlice({
         updateSubtitle: (state, update) => {
             state.subtitle = update.payload
         },
+        toggleAnte: (state) => {
+            state.isAnteEnabled = !state.isAnteEnabled
+        },
+        resetGame: (state) => {
+            // Reset to initial state but keep the current blind structure selection
+            const currentBlindStructure = state.blindStructure;
+            Object.assign(state, {
+                title: "",
+                subtitle: "",
+                startTime: "",
+                isSoundEnabled: true,
+                currentBlindLevel: 1,
+                currency: "GBP",
+                currencySymbol: "£",
+                buyInPrice: 10,
+                expenses: 0,
+                numOfPlayers: 6,
+                placesPaid: 3,
+                prizes: [100, 75, 50],
+                isAnteEnabled: false,
+            });
+            state.blindStructure = currentBlindStructure;
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindStructure, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency, updateTitle, updateSubtitle } = gameSlice.actions
+export const { updateStartTime, changeBlindLevel, addBlindLevel, updateBlindStructure, updateBlindLevel, deleteBlindLevel, updateNumOfPlayers, updateBuyinPrice, updateExpenses, updatePrizes, updateCurrency, updateTitle, updateSubtitle, toggleAnte, resetGame } = gameSlice.actions
 
 export default gameSlice.reducer

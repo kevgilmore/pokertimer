@@ -7,10 +7,10 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Space, Table, Form, InputNumber, Flex } from 'antd';
+import { Button, Space, Table, Form, InputNumber, Flex, Checkbox } from 'antd';
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {addBlindLevel, updateBlindStructure, deleteBlindLevel} from "../redux/game";
+import {addBlindLevel, updateBlindStructure, deleteBlindLevel, toggleAnte} from "../redux/game";
 
 
 const EditableContext = React.createContext(null);
@@ -326,6 +326,20 @@ const Tab1Component = () => {
               })}
               
             </Flex>
+            
+            <div style={{ margin: '20px 0', textAlign: 'center' }}>
+              <Checkbox 
+                checked={game.isAnteEnabled}
+                onChange={() => dispatch(toggleAnte())}
+                style={{ 
+                  color: '#fff',
+                  fontSize: '16px',
+                  fontWeight: '500'
+                }}
+              >
+                Add Big Blind Ante
+              </Checkbox>
+            </div>
             
             <div className="tableHeaderLabels">
                 <p className="tableHeaderItem">SMALL</p>

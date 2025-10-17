@@ -504,7 +504,9 @@ const App = () => {
                                     </div>
                                     <div className="blindsValueContainer anteContainer">
                                         <div className="blindsLabel" style={{textAlign: 'left', paddingLeft: '10px'}}>ANTE</div>
-                                        <h1 className="activeBlindGreenText">0</h1>
+                                        <h1 className="activeBlindGreenText">
+                                            {game.isAnteEnabled ? game.blindStructure[game.currentBlindLevel - 1].big : 0}
+                                        </h1>
                                     </div>
                                 </div>
                             </div>
@@ -577,7 +579,6 @@ const App = () => {
                                 🚀 Upcoming Features
                             </h4>
                             <ul style={{ margin: 0, paddingLeft: '20px', color: '#ccc' }}>
-                                <li>Ante support</li>
                                 <li>Mobile remote</li>
                             </ul>
                         </div>
