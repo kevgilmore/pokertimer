@@ -222,9 +222,11 @@ const App = () => {
     };
 
     const handleBuyinDecrease = () => {
-        const newCount = game.numOfPlayers - 1;
-        dispatch(updateNumOfPlayers(newCount));
-        trackBuyinChange(newCount);
+        if (game.numOfPlayers > 1) {
+            const newCount = game.numOfPlayers - 1;
+            dispatch(updateNumOfPlayers(newCount));
+            trackBuyinChange(newCount);
+        }
     };
 
     // Track when user leaves the page
