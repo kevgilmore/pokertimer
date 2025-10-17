@@ -115,6 +115,7 @@ const Tab2Component = () => {
               style={{width: 70, backgroundColor: "#202020"}}
               bordered={false}
               stringMode={false}
+              min={1}
             />
   }
   return (
@@ -162,6 +163,7 @@ const Tab2Component = () => {
           style={{width: 70, backgroundColor: "#202020"}}
           bordered={false}
           stringMode={false}
+          min={0}
         />
       </Form.Item>
 			
@@ -176,6 +178,7 @@ const Tab2Component = () => {
           style={{width: 70, backgroundColor: "#202020"}}
           bordered={false}
           stringMode={false}
+          min={0}
         />
       </Form.Item>
       

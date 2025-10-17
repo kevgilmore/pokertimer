@@ -73,6 +73,7 @@ const EditableCell = ({
             ref={inputRef}
             stringMode={false}
             onPressEnter={save} onBlur={save} tabIndex={dataIndex}
+            min={0}
           />
         </Form.Item>
       ) : (
