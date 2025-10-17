@@ -1719,7 +1719,7 @@ background-color: var(--mainDark) !important;
 }
 
 #mc-embedded-subscribe-form input[type="email"]:invalid {
-  border-color: #ff4d4f !important;
+  border-color: #666CFF !important;
 }
 
 #mc-embedded-subscribe-form input[type="email"]:valid {
