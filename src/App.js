@@ -313,15 +313,17 @@ const App = () => {
 
     const togglePrev = () => {
         if (game.currentBlindLevel > 1) {
-            dispatch(changeBlindLevel(game.currentBlindLevel - 1))
-            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+            const newLevel = game.currentBlindLevel - 1;
+            dispatch(changeBlindLevel(newLevel))
+            setTimeLeft(game.blindStructure[newLevel - 1].duration * 60)
         }
     }
 
     const toggleNext = () => {
         if (hasNextBlind()) {
-            dispatch(changeBlindLevel(game.currentBlindLevel + 1))
-            setTimeLeft(game.blindStructure[game.currentBlindLevel].duration * 60)
+            const newLevel = game.currentBlindLevel + 1;
+            dispatch(changeBlindLevel(newLevel))
+            setTimeLeft(game.blindStructure[newLevel - 1].duration * 60)
         }
     }
 
@@ -343,6 +345,23 @@ const App = () => {
     const calculatePercentage = () => {
        let timeLeft = (game.blindStructure[game.currentBlindLevel-1].duration * 60 - timePassed);
        return (timeLeft / (game.blindStructure[game.currentBlindLevel-1].duration * 60) * 100).toFixed(0)
+    }
+
+    const formatBlindValue = (value) => {
+        if (value >= 10000) {
+            return (value / 1000).toFixed(0) + 'K';
+        }
+        return value.toString();
+    }
+
+    const formatBlindsDisplay = (small, big) => {
+        if (small >= 10000 || big >= 10000) {
+            // When either blind reaches 10K+, abbreviate both for consistency
+            const smallFormatted = small >= 10000 ? (small / 1000).toFixed(0) + 'K' : (small / 1000).toFixed(0) + 'K';
+            const bigFormatted = big >= 10000 ? (big / 1000).toFixed(0) + 'K' : (big / 1000).toFixed(0) + 'K';
+            return `${smallFormatted}/${bigFormatted}`;
+        }
+        return `${small}/${big}`;
     }
 
     const getIcon = () => {
@@ -486,7 +505,7 @@ const App = () => {
                                                            game.currentBlindLevel < 3 ? 4 : game.currentBlindLevel + 2
                                     ).map((blind, index) => {
                                     return <div key={index} className={parseInt(blind.key) === (game.currentBlindLevel) ? 'blind-item-selected' : 'blind-item'}>
-                                        {blind.small}/{blind.big}
+                                        {formatBlindsDisplay(blind.small, blind.big)}
                                     </div>
                                 })}
                                 {game.currentBlindLevel > game.blindStructure.length - 2 ? <div className="blind-item">END</div> : null}
@@ -499,13 +518,13 @@ const App = () => {
                                     <div className="blindsValueContainer">
                                         <div className="blindsLabel" style={{textAlign: 'left', paddingLeft: '10px'}}>BLINDS</div>
                                         <h1 className="activeBlindGreenText">
-                                            {game.blindStructure[game.currentBlindLevel - 1].small + "/" + game.blindStructure[game.currentBlindLevel - 1].big}
+                                            {formatBlindsDisplay(game.blindStructure[game.currentBlindLevel - 1].small, game.blindStructure[game.currentBlindLevel - 1].big)}
                                         </h1>
                                     </div>
                                     <div className="blindsValueContainer anteContainer">
                                         <div className="blindsLabel" style={{textAlign: 'left', paddingLeft: '10px'}}>ANTE</div>
                                         <h1 className="activeBlindGreenText">
-                                            {game.isAnteEnabled ? game.blindStructure[game.currentBlindLevel - 1].big : 0}
+                                            {game.isAnteEnabled ? formatBlindValue(game.blindStructure[game.currentBlindLevel - 1].big) : 0}
                                         </h1>
                                     </div>
                                 </div>
